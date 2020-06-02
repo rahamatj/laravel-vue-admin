@@ -124,7 +124,7 @@ class LoginController extends Controller
         return response()->json([
             'message' => 'Login successful!',
             'token' => $user->createToken(config('app.name'))->accessToken,
-            'user' => $user
+            'user' => $user->toArray()
         ]);
     }
 

@@ -46,6 +46,25 @@ class LoginTest extends TestCase
     }
 
     /** @test */
+    public function user_can_access_dashboard_with_access_token()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->json('post', '/api/login', $this->requestData([
+            'email' => $user->email
+        ]));
+
+        $token = $response->getOriginalContent()['token'];
+
+        $response = $this->json('get', '/api/dashboard', [], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $response->assertOk();
+        $response->assertJson($user->toArray());
+    }
+
+    /** @test */
     public function fields_are_required_to_get_access_token()
     {
         $response = $this->json('post', '/api/login', $this->requestData([
@@ -314,11 +333,18 @@ class LoginTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        Passport::actingAs($user);
+        $response = $this->json('post', '/api/login', $this->requestData([
+            'email' => $user->email
+        ]));
 
-        $response = $this->json('post', '/api/logout');
+        $token = $response->getOriginalContent()['token'];
+
+        $response = $this->json('post', '/api/logout', [], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
 
         $response->assertNoContent();
+        $this->assertCount(0, User::find($user->id)->tokens);
     }
 
     /** @test */

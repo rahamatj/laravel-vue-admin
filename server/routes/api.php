@@ -14,12 +14,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/login', 'Api\Auth\LoginController@login');
-Route::post('/password/email', 'Api\Auth\ForgotPasswordController@sendResetLinkEmail');
-Route::post('/password/reset', 'Api\Auth\ResetPasswordController@reset');
+Route::post('/login', 'Auth\LoginController@login');
+Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::post('/logout', 'Api\Auth\LoginController@logout');
+    Route::post('/logout', 'Auth\LoginController@logout');
 });
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {

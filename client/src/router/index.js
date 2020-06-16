@@ -9,12 +9,13 @@ export default new Router({
     },
     routes: [
 
-        // Dashboards
+        // Login
 
         {
             path: '/',
-            name: 'analytics',
-            component: () => import('../DemoPages/Dashboards/Analytics.vue'),
+            name: 'login',
+            meta: {layout: 'userpages'},
+            component: () => import('../Auth/Login.vue'),
         },
 
         // Pages

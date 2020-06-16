@@ -59,10 +59,16 @@
 </template>
 
 <script>
+    import { Form } from '../utils/Form'
+
     export default {
         data() {
             return {
-                year: ''
+                year: '',
+                form: new Form({
+                  email: '',
+                  password: ''
+                })
             }
         },
         created() {

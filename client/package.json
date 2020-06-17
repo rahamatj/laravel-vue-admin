@@ -6,6 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
+    "test:watch": "vue-cli-service test:unit --watch",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -13,11 +14,14 @@
     "@fortawesome/free-solid-svg-icons": "^5.13.0",
     "@fortawesome/vue-fontawesome": "^0.1.9",
     "animate-sass": "^0.8.2",
+    "axios": "^0.19.2",
     "bootstrap": "^4.5.0",
     "bootstrap-vue": "^2.15.0",
     "chart.js": "^2.9.3",
     "es6-promise": "^4.2.8",
+    "fingerprintjs2": "^2.1.0",
     "increase-memory-limit": "^1.0.7",
+    "lodash": "^4.17.15",
     "pe7-icon": "^1.0.4",
     "perfect-scrollbar": "^1.5.0",
     "popper.js": "^1.16.1",
@@ -26,6 +30,7 @@
     "vue-chartjs": "^3.5.0",
     "vue-perfect-scrollbar": "^0.1.0",
     "vue-router": "^3.3.2",
+    "vue-router-multiguard": "^1.0.3",
     "vue-sidebar-menu": "^3.12.2",
     "vue2-google-maps": "^0.10.7",
     "vuex": "^3.4.0"
@@ -40,7 +45,9 @@
     "babel-preset-env": "^1.7.0",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.2.3",
+    "moxios": "^0.4.0",
     "node-sass": "^4.14.1",
+    "sinon": "^9.0.2",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.1",
     "vue-template-compiler": "^2.6.11"

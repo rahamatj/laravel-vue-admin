@@ -21,15 +21,15 @@ export default class TestUtils {
     return this.wrapper.find(selector).trigger('keydown')
   }
 
-  see (text) {
+  text (text) {
     expect(this.wrapper.text()).toContain(text)
   }
 
-  hasHtml (html) {
+  see (html) {
     expect(this.wrapper.html()).toContain(html)
   }
 
-  doesNotHaveHtml (html) {
+  doNotSee (html) {
     expect(this.wrapper.html()).not.toContain(html)
   }
 }

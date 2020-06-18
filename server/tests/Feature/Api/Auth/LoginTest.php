@@ -20,7 +20,6 @@ class LoginTest extends TestCase
         'fingerprint' => 'test',
         'client' => 'test',
         'platform' => 'test',
-        'ip' => 'test'
     ];
 
     public function setUp(): void
@@ -73,7 +72,6 @@ class LoginTest extends TestCase
             'fingerprint' => '',
             'client' => '',
             'platform' => '',
-            'ip' => ''
 
         ]));
 
@@ -85,8 +83,7 @@ class LoginTest extends TestCase
                 'password' => ['The password field is required.'],
                 'fingerprint' => ['The fingerprint field is required.'],
                 'client' => ['The client field is required.'],
-                'platform' => ['The platform field is required.'],
-                'ip' => ['The ip field is required.']
+                'platform' => ['The platform field is required.']
             ]
         ]);
     }
@@ -278,7 +275,7 @@ class LoginTest extends TestCase
 
         $response->assertUnauthorized();
         $response->assertJson([
-            'message' => 'Login from this IP: test is not allowed.'
+            'message' => 'Login from this IP: 127.0.0.1 is not allowed.'
         ]);
     }
 
@@ -312,13 +309,13 @@ class LoginTest extends TestCase
         ]);
 
         $client = factory(Client::class)->create([
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'ip' => '127.0.0.1'
         ]);
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email,
-            'fingerprint' => $client->fingerprint,
-            'ip' => $client->ip
+            'fingerprint' => $client->fingerprint
         ]));
 
         $response->assertOk();

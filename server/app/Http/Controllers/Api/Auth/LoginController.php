@@ -34,7 +34,7 @@ class LoginController extends Controller
 
         if (!$this->isIpAllowed($request, $user))
             return response()->json([
-                'message' => 'Login from this IP: ' . $request->ip . ' is not allowed.'
+                'message' => 'Login from this IP: ' . $request->getClientIp() . ' is not allowed.'
             ], 401);
 
         if (!$this->isClientAllowed($request, $user))
@@ -88,7 +88,7 @@ class LoginController extends Controller
         if ($user->is_ip_lock_enabled) {
             $client = Client::where([
                 ['user_id', $user->id],
-                ['ip', $request->ip]
+                ['ip', $request->getClientIp()]
             ])->first();
 
             if ($client == null && Client::all()->count() > 0)
@@ -117,7 +117,7 @@ class LoginController extends Controller
             'user_id' => $user->id,
             'client' => $request->client,
             'platform' => $request->platform,
-            'ip' => $request->ip,
+            'ip' => $request->getClientIp(),
             'logged_in_at' => date("Y-m-d H:i:s")
         ]);
 
@@ -136,7 +136,6 @@ class LoginController extends Controller
             'fingerprint' => 'required|string',
             'client' => 'required|string',
             'platform' => 'required|string',
-            'ip' => 'required|string'
         ]);
     }
 

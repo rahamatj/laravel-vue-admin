@@ -5,14 +5,14 @@
                 <b-col md="8" class="mx-auto app-login-box">
                     <b-alert :show="form.errors.hasMessage()"
                              variant="danger"
-                             dismissible
                              v-text="form.errors.getMessage()"
+                             dismissible
                     >
                     </b-alert>
                     <div class="modal-dialog w-100 mx-auto">
                         <b-form id="login-form"
                                 @submit.prevent="login"
-                                @keydown="form.errors.clear($event.target.name)"
+                                @keydown="form.errors.clear()"
                         >
                             <div class="modal-content">
                                 <div class="modal-body">
@@ -63,8 +63,12 @@
                                                   type="submit"
                                                   variant="primary"
                                                   size="lg"
-                                                  :disabled="form.errors.any()"
-                                        >Login to Dashboard
+                                                  :disabled="form.errors.any() || loading"
+                                        ><b-spinner class="spinner"
+                                                    small
+                                                    v-if="loading"
+                                        ></b-spinner>
+                                            Login to Dashboard
                                         </b-button>
                                     </div>
                                 </div>
@@ -89,6 +93,7 @@
     data() {
       return {
         year: '',
+        loading: false,
         form: new Form({
           email: '',
           password: '',
@@ -101,9 +106,16 @@
     methods: {
       ...mapActions('login', ['getToken']),
       login() {
+        this.loading = true
         this.getToken(this.form)
-            .then(data => this.$router.replace({ name: 'dashboard' }))
-            .catch(data => console.log(data))
+            .then(data => {
+              this.loading = false
+              this.$router.replace({ name: 'dashboard' })
+            })
+            .catch(data => {
+              console.log(data)
+              this.loading = false
+            })
       },
       getClientInfo() {
         Fingerprint2.get({

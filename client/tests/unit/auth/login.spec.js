@@ -5,13 +5,12 @@ import Vuex from 'vuex'
 import Errors from "../../../src/utils/Errors"
 
 describe ('Login.vue', () => {
-
   it ('gets token and redirects to dashboard', async () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
 
     const actions = {
-      getToken: jest.fn()
+      getToken: () => Promise.resolve()
     }
 
     const $router = {
@@ -23,7 +22,7 @@ describe ('Login.vue', () => {
     const testUtils = new TestUtils(wrapper)
 
     await testUtils.submit('#login-form')
-    expect(actions.getToken).toHaveBeenCalled()
+    await wrapper.vm.$nextTick()
     expect($router.replace).toHaveBeenCalledWith({ name: 'dashboard' })
   })
 
@@ -31,7 +30,7 @@ describe ('Login.vue', () => {
     const wrapper = shallowMount(Login)
     const testUtils = new TestUtils(wrapper)
 
-    testUtils.see((new Date().getFullYear()))
+    testUtils.text((new Date().getFullYear()))
   })
 
   it ('shows errors if any', async () => {
@@ -52,11 +51,11 @@ describe ('Login.vue', () => {
       }
     })
 
-    await wrapper.vm.$nextTick();
+    await wrapper.vm.$nextTick()
 
-    testUtils.hasHtml('The given data was invalid.')
-    testUtils.hasHtml('The email field is required.')
-    testUtils.hasHtml('The password field is required.')
+    testUtils.see('The given data was invalid.')
+    testUtils.see('The email field is required.')
+    testUtils.see('The password field is required.')
   })
 
   it ('removes error when the error is fixed', async () => {
@@ -79,19 +78,18 @@ describe ('Login.vue', () => {
 
     await wrapper.vm.$nextTick();
 
-    testUtils.hasHtml('The given data was invalid.')
-    testUtils.hasHtml('The email field is required.')
-    testUtils.hasHtml('The password field is required.')
+    testUtils.see('The given data was invalid.')
+    testUtils.see('The email field is required.')
+    testUtils.see('The password field is required.')
 
     wrapper.vm.form.errors.record({
       message: 'The given data was invalid.',
-      errors: {
-        password: ['The password field is required.']
-      }
+      errors: {}
     })
 
     await wrapper.vm.$nextTick();
-    testUtils.doesNotHaveHtml('The email field is required.')
+    testUtils.doNotSee('The email field is required.')
+    testUtils.doNotSee('The password field is required.')
   })
 
   it ('disables the submit button if there are any errors', async () => {
@@ -168,15 +166,14 @@ describe ('Login.vue', () => {
 
     await wrapper.vm.$nextTick();
 
-    testUtils.hasHtml('The given data was invalid.')
+    testUtils.see('The given data was invalid.')
 
     wrapper.vm.form.errors.record({
       message: 'The given data was invalid.',
-      errors: {
-        email: ['The email field is required.'],
-        password: ['The password field is required.']
-      }
+      errors: {}
     })
+
+    expect(wrapper.vm.form.errors.hasMessage()).toBe(false)
   })
 
   it ('gets client info when created', () => {
@@ -194,5 +191,74 @@ describe ('Login.vue', () => {
     expect(wrapper.vm.fingerprint).not.toBe('')
     expect(wrapper.vm.client).not.toBe('')
     expect(wrapper.vm.platform).not.toBe('')
+  })
+
+  it ('shows spinner and disables button once clicked while waiting for the api to respond with 200 status', async () => {
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
+
+    const actions = {
+      getToken: () => Promise.resolve()
+    }
+    const store = new Vuex.Store({ modules: { login: { namespaced:true, actions } } })
+
+    const wrapper = shallowMount(Login, { localVue, store })
+    const testUtils = new TestUtils(wrapper)
+
+    expect(wrapper.contains('.spinner')).toBe(false)
+
+    const loginButton = wrapper.find('#login')
+    expect(loginButton.attributes('disabled')).toBe(undefined)
+
+    testUtils.submit('#login-form')
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.contains('.spinner')).toBe(true)
+    expect(loginButton.attributes('disabled')).toBe("true")
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.contains('.spinner')).toBe(false)
+    expect(loginButton.attributes('disabled')).toBe(undefined)
+  })
+
+  it ('shows spinner once clicked while waiting for the api to respond with error', async () => {
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
+
+    const actions = {
+      getToken: () => Promise.reject()
+    }
+    const store = new Vuex.Store({ modules: { login: { namespaced:true, actions } } })
+
+    const wrapper = shallowMount(Login, { localVue, store })
+    const testUtils = new TestUtils(wrapper)
+
+    expect(wrapper.contains('.spinner')).toBe(false)
+
+    const loginButton = wrapper.find('#login')
+    expect(loginButton.attributes('disabled')).toBe(undefined)
+
+    testUtils.submit('#login-form')
+
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.contains('.spinner')).toBe(true)
+    expect(loginButton.attributes('disabled')).toBe("true")
+
+    wrapper.vm.form.errors.record({
+      message: 'The given data was invalid.',
+      errors: {
+        email: ['The email field is required.'],
+        password: ['The password field is required.']
+      }
+    })
+
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.contains('.spinner')).toBe(false)
+    expect(loginButton.attributes('disabled')).toBe("true")
   })
 })

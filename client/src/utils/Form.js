@@ -15,6 +15,20 @@ export default class Form {
     }
 
     this.errors = new Errors();
+    this.message = '';
+    this.loading = false;
+  }
+
+  isLoading() {
+    return this.loading;
+  }
+
+  hasMessage() {
+    return !!this.message;
+  }
+
+  getMessage() {
+    return this.message;
   }
 
 
@@ -91,6 +105,7 @@ export default class Form {
    * @param {string} url
    */
   submit(requestType, url) {
+    this.loading = true;
     return new Promise((resolve, reject) => {
       axios[requestType](url, this.data())
           .then(response => {
@@ -113,18 +128,20 @@ export default class Form {
    * @param {object} data
    */
   onSuccess(data) {
-    console.log(data.message); // temporary
+    this.message = data.message;
 
     this.reset();
+    this.loading = false;
   }
 
 
   /**
    * Handle a failed form submission.
    *
-   * @param {object} errors
+   * @param {object} data
    */
   onFail(data) {
     this.errors.record(data);
+    this.loading = false;
   }
 }

@@ -21,7 +21,7 @@
       loading() {
         return !this.$route.meta.layout
       }
-    }
+    },
   }
 </script>
 

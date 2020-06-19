@@ -8,6 +8,7 @@ export default new Router({
   scrollBehavior() {
     return window.scrollTo({top: 0, behavior: 'smooth'});
   },
+  mode: 'history',
   routes: [
 
     // Login
@@ -15,8 +16,34 @@ export default new Router({
     {
       path: '/',
       name: 'login',
-      meta: {layout: 'userpages'},
+      meta: {
+        title: 'Login',
+        layout: 'userpages'
+      },
       component: () => import('../Auth/Login.vue'),
+      beforeEnter: guards.redirectToDashboard
+    },
+
+    {
+      path: '/password/reset',
+      name: 'password.request',
+      meta: {
+        title: 'Reset Password',
+        layout: 'userpages'
+      },
+      component: () => import('../Auth/Passwords/Email.vue'),
+      beforeEnter: guards.redirectToDashboard
+    },
+
+    {
+      path: '/password/reset/:token',
+      name: 'password.reset',
+      meta: {
+        title: 'Reset Password',
+        layout: 'userpages'
+      },
+      component: () => import('../Auth/Passwords/Reset.vue'),
+      props: true,
       beforeEnter: guards.redirectToDashboard
     },
 
@@ -25,7 +52,10 @@ export default new Router({
     {
       path: '/dashboard',
       name: 'dashboard',
-      meta: {layout: 'default'},
+      meta: {
+        title: 'Dashboard',
+        layout: 'default'
+      },
       component: () => import('../Dashboard/Dashboard.vue'),
       beforeEnter: guards.redirectToLogin
     },

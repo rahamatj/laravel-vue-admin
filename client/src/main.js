@@ -22,6 +22,16 @@ Vue.use(BootstrapVue);
 Vue.component('default-layout', Default);
 Vue.component('userpages-layout', Pages);
 
+router.beforeEach((to, from, next) => {
+  let title = 'Eload'
+
+  if (to.meta.title)
+    title += ' - ' + to.meta.title
+
+  document.title = title
+  next()
+})
+
 new Vue({
   el: '#app',
   router,

@@ -3,9 +3,10 @@ import Login from '@/Auth/Login.vue'
 import TestUtils from '../../TestUtils'
 import Vuex from 'vuex'
 import Errors from "../../../src/utils/Errors"
+import flushPromises from 'flush-promises'
 
 describe ('Login.vue', () => {
-  it ('gets token and redirects to dashboard', async () => {
+  it ('authenticates and redirects to dashboard', async () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
 
@@ -21,10 +22,9 @@ describe ('Login.vue', () => {
     const wrapper = shallowMount(Login, { store, localVue, mocks: { $router } })
     const testUtils = new TestUtils(wrapper)
 
-    testUtils.submit('#login-form')
+    await testUtils.submit('#login-form')
 
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(actions.authenticate).toHaveBeenCalled()
     expect($router.replace).toHaveBeenCalledWith({ name: 'dashboard' })
@@ -197,72 +197,14 @@ describe ('Login.vue', () => {
     expect(wrapper.vm.platform).not.toBe('')
   })
 
-  it ('shows spinner and disables button once clicked while waiting for the api to respond with 200 status', async () => {
-    const localVue = createLocalVue()
-    localVue.use(Vuex)
+  it ('shows spinner and disables the submit while form is loading', async () => {
+    const wrapper = shallowMount(Login)
 
-    const actions = {
-      authenticate: () => Promise.resolve()
-    }
-    const store = new Vuex.Store({ modules: { login: { namespaced:true, actions } } })
-
-    const wrapper = shallowMount(Login, { localVue, store })
-    const testUtils = new TestUtils(wrapper)
-
-    expect(wrapper.contains('.spinner')).toBe(false)
-
-    const loginButton = wrapper.find('#login')
-    expect(loginButton.attributes('disabled')).toBe(undefined)
-
-    testUtils.submit('#login-form')
+    wrapper.vm.form.loading = true
 
     await wrapper.vm.$nextTick()
 
     expect(wrapper.contains('.spinner')).toBe(true)
-    expect(loginButton.attributes('disabled')).toBe("true")
-
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.contains('.spinner')).toBe(false)
-    expect(loginButton.attributes('disabled')).toBe(undefined)
-  })
-
-  it ('shows spinner once clicked while waiting for the api to respond with error', async () => {
-    const localVue = createLocalVue()
-    localVue.use(Vuex)
-
-    const actions = {
-      authenticate: () => Promise.reject()
-    }
-    const store = new Vuex.Store({ modules: { login: { namespaced:true, actions } } })
-
-    const wrapper = shallowMount(Login, { localVue, store })
-    const testUtils = new TestUtils(wrapper)
-
-    expect(wrapper.contains('.spinner')).toBe(false)
-
-    const loginButton = wrapper.find('#login')
-    expect(loginButton.attributes('disabled')).toBe(undefined)
-
-    testUtils.submit('#login-form')
-
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.contains('.spinner')).toBe(true)
-    expect(loginButton.attributes('disabled')).toBe("true")
-
-    wrapper.vm.form.errors.record({
-      message: 'The given data was invalid.',
-      errors: {
-        email: ['The email field is required.'],
-        password: ['The password field is required.']
-      }
-    })
-
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.contains('.spinner')).toBe(false)
-    expect(loginButton.attributes('disabled')).toBe("true")
+    expect(wrapper.find('#login').attributes('disabled')).toBe("true")
   })
 })

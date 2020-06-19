@@ -70,10 +70,7 @@ class ResetPassword extends Notification implements ShouldQueue
         if (static::$createUrlCallback) {
             $url = call_user_func(static::$createUrlCallback, $notifiable, $this->token);
         } else {
-            $url = url(route('password.reset', [
-                'token' => $this->token,
-                'email' => $notifiable->getEmailForPasswordReset(),
-            ], false));
+            $url = url("/password/reset/" . $this->token);
         }
 
         return (new MailMessage)

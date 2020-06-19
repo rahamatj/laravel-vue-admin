@@ -64,7 +64,7 @@ describe('actions', () => {
     ])
   })
 
-  it.only ('unauthenticates user', async () => {
+  it ('unauthenticates user', async () => {
     const commit = sinon.spy()
 
     moxios.stubRequest('/api/logout', { status: 204 })

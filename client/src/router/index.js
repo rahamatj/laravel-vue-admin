@@ -26,7 +26,7 @@ export default new Router({
       path: '/dashboard',
       name: 'dashboard',
       meta: {layout: 'default'},
-      component: () => import('../DemoPages/Dashboards/Analytics.vue'),
+      component: () => import('../Dashboard/Dashboard.vue'),
       beforeEnter: guards.redirectToLogin
     },
 

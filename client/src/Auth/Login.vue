@@ -6,7 +6,6 @@
                     <b-alert :show="form.errors.hasMessage()"
                              variant="danger"
                              v-text="form.errors.getMessage()"
-                             dismissible
                     >
                     </b-alert>
                     <div class="modal-dialog w-100 mx-auto">
@@ -104,10 +103,10 @@
       }
     },
     methods: {
-      ...mapActions('login', ['getToken']),
+      ...mapActions('login', ['authenticate']),
       login() {
         this.loading = true
-        this.getToken(this.form)
+        this.authenticate(this.form)
             .then(data => {
               this.loading = false
               this.$router.replace({ name: 'dashboard' })

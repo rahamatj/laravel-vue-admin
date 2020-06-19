@@ -16,16 +16,12 @@
                             <button type="button" tabindex="0" class="dropdown-item">Actions</button>
                             <div tabindex="-1" class="dropdown-divider"></div>
                             <button type="button" tabindex="0" class="dropdown-item">Dividers</button>
+                            <div tabindex="-1" class="dropdown-divider"></div>
+                            <button id="logout" @click="logout" type="button" tabindex="0" class="dropdown-item">Logout</button>
                         </b-dropdown>
                     </div>
                     <div class="widget-content-left  ml-3 header-user-info">
-                        <div class="widget-heading">Alina Mclourd</div>
-                        <div class="widget-subheading">VP People Manager</div>
-                    </div>
-                    <div class="widget-content-right header-user-info ml-3">
-                        <b-btn v-b-tooltip.hover title="Tooltip Example" class="btn-shadow p-1" size="sm" variant="info">
-                            <font-awesome-icon icon="calendar-alt" class="mr-1 ml-1"/>
-                        </b-btn>
+                        <div class="widget-heading" v-if="user" v-text="user.name"></div>
                     </div>
                 </div>
             </div>
@@ -35,6 +31,7 @@
 
 <script>
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+    import { mapGetters, mapActions } from 'vuex'
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -72,8 +69,18 @@
         data: () => ({
 
         }),
-
-        methods: {}
+        computed: {
+          ...mapGetters('login', ['user'])
+        },
+        methods: {
+          ...mapActions('login', ['unauthenticate']),
+          logout() {
+            this.unauthenticate()
+                .then(() => {
+                  this.$router.replace({ name: 'login' })
+                })
+          }
+        }
     }
 
 

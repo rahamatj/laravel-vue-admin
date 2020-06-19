@@ -2,6 +2,10 @@ import guards from '@/guards'
 import store from '@/store'
 
 describe('guards', () => {
+  beforeEach(() => {
+    localStorage.clear()
+  })
+
   it ('redirects authenticated user to dashboard when accessing login page', () => {
     store.commit('login/SET_TOKEN', 'test')
 

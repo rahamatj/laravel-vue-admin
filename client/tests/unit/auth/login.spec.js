@@ -10,19 +10,23 @@ describe ('Login.vue', () => {
     localVue.use(Vuex)
 
     const actions = {
-      getToken: () => Promise.resolve()
+      authenticate: jest.fn(() => Promise.resolve())
     }
 
     const $router = {
       replace: jest.fn()
     }
 
-    const store = new Vuex.Store({ modules: { login: { namespaced:true, actions } } })
+    const store = new Vuex.Store({ modules: { login: { namespaced: true, actions } } })
     const wrapper = shallowMount(Login, { store, localVue, mocks: { $router } })
     const testUtils = new TestUtils(wrapper)
 
-    await testUtils.submit('#login-form')
+    testUtils.submit('#login-form')
+
     await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    expect(actions.authenticate).toHaveBeenCalled()
     expect($router.replace).toHaveBeenCalledWith({ name: 'dashboard' })
   })
 
@@ -198,7 +202,7 @@ describe ('Login.vue', () => {
     localVue.use(Vuex)
 
     const actions = {
-      getToken: () => Promise.resolve()
+      authenticate: () => Promise.resolve()
     }
     const store = new Vuex.Store({ modules: { login: { namespaced:true, actions } } })
 
@@ -228,7 +232,7 @@ describe ('Login.vue', () => {
     localVue.use(Vuex)
 
     const actions = {
-      getToken: () => Promise.reject()
+      authenticate: () => Promise.reject()
     }
     const store = new Vuex.Store({ modules: { login: { namespaced:true, actions } } })
 

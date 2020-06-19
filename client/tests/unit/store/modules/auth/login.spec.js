@@ -32,7 +32,7 @@ describe('actions', () => {
     moxios.uninstall()
   })
 
-  it ('gets token', async () => {
+  it ('authenticates user', async () => {
     const commit = sinon.spy()
 
     moxios.stubRequest('/api/login', {
@@ -47,7 +47,7 @@ describe('actions', () => {
       }
     })
 
-    await actions.getToken({ commit }, new Form({
+    await actions.authenticate({ commit }, new Form({
       email: 'admin@email.com',
       password: '12345678',
       fingerprint: 'test',
@@ -61,6 +61,19 @@ describe('actions', () => {
           name: 'Admin',
           email: 'admin@email.com'
         }]
+    ])
+  })
+
+  it.only ('unauthenticates user', async () => {
+    const commit = sinon.spy()
+
+    moxios.stubRequest('/api/logout', { status: 204 })
+
+    await actions.unauthenticate({ commit })
+
+    expect(commit.args).toStrictEqual([
+      ['SET_TOKEN', null],
+      ['SET_USER', null]
     ])
   })
 })

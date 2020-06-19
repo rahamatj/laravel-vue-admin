@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export default {
   namespaced: true,
   state: {
@@ -21,7 +23,7 @@ export default {
     }
   },
   actions: {
-    getToken ({ commit }, form) {
+    authenticate ({ commit }, form) {
       return new Promise((resolve, reject) => {
         form.post('/api/login')
             .then(data => {
@@ -33,6 +35,18 @@ export default {
             .catch(data => {
               reject(data)
             })
+      })
+    },
+    unauthenticate({ commit }) {
+      return new Promise((resolve, reject) => {
+        axios.post('/api/logout')
+            .then(response => {
+              commit('SET_TOKEN', null)
+              commit('SET_USER', null)
+
+              resolve()
+            })
+            .catch(error => reject(error))
       })
     }
   }

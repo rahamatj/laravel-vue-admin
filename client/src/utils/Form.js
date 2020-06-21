@@ -15,7 +15,7 @@ export default class Form {
     }
 
     this.errors = new Errors();
-    this.message = '';
+    this.successMessage = '';
     this.loading = false;
   }
 
@@ -23,12 +23,12 @@ export default class Form {
     return this.loading;
   }
 
-  hasMessage() {
-    return !!this.message;
+  hasSuccessMessage() {
+    return !!this.successMessage;
   }
 
-  getMessage() {
-    return this.message;
+  getSuccessMessage() {
+    return this.successMessage;
   }
 
 
@@ -128,7 +128,7 @@ export default class Form {
    * @param {object} data
    */
   onSuccess(data) {
-    this.message = data.message;
+    this.successMessage = data.message;
 
     this.reset();
     this.loading = false;

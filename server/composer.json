@@ -15,7 +15,8 @@
         "laravel/framework": "^7.0",
         "laravel/passport": "^9.2",
         "laravel/tinker": "^2.0",
-        "laravel/ui": "^2.0"
+        "laravel/ui": "^2.0",
+        "pragmarx/google2fa-laravel": "^1.3"
     },
     "require-dev": {
         "facade/ignition": "^2.0",

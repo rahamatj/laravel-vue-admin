@@ -126,6 +126,7 @@
 // `<button>`-specific styles are denoted with `// For <button>s`
 .dropdown-item {
   display: block;
+  cursor: pointer;
   width: 100%; // For `<button>`s
   padding: $dropdown-item-padding-y $dropdown-item-padding-x;
   clear: both;

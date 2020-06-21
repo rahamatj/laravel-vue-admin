@@ -3,9 +3,9 @@
         <div class="h-100 bg-plum-plate bg-animation">
             <div class="d-flex h-100 justify-content-center align-items-center">
                 <b-col md="8" class="mx-auto app-login-box">
-                    <b-alert :show="form.hasMessage()"
+                    <b-alert :show="form.hasSuccessMessage()"
                              variant="success"
-                             v-text="form.getMessage()"
+                             v-text="form.getSuccessMessage()"
                     >
                     </b-alert>
                     <b-alert :show="form.errors.hasMessage()"

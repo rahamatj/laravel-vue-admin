@@ -3,9 +3,9 @@
         <div class="h-100 bg-plum-plate bg-animation">
             <div class="d-flex h-100 justify-content-center align-items-center">
                 <b-col md="8" class="mx-auto app-login-box">
-                    <b-alert :show="form.hasMessage()"
+                    <b-alert :show="form.hasSuccessMessage()"
                              variant="success"
-                             v-text="form.getMessage()"
+                             v-text="form.getSuccessMessage()"
                     >
                     </b-alert>
                     <b-alert :show="form.errors.hasMessage()"
@@ -67,6 +67,9 @@
                                     <div class="divider"/>
                                 </div>
                                 <div class="modal-footer clearfix">
+                                    <div class="float-left" v-if="passwordReset">
+                                        <router-link :to="{ name: 'login' }" class="btn-lg btn btn-link">Login</router-link>
+                                    </div>
                                     <div class="float-right">
                                         <b-button id="reset-password"
                                                   type="submit"
@@ -101,6 +104,7 @@
     data() {
       return {
         year: '',
+        passwordReset: false,
         form: new Form({
           email: '',
           password: '',
@@ -112,6 +116,7 @@
     methods: {
       reset() {
         this.form.post('/api/password/reset')
+            .then(data => this.passwordReset = true)
             .catch(data => console.log(data))
       }
     },

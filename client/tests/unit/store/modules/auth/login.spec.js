@@ -23,6 +23,32 @@ describe ('mutations', () => {
   })
 })
 
+describe('getters', () => {
+  it ('gets authenticated true when token is set', () => {
+    const state = { token: 'test' }
+
+    const result = getters.authenticated(state)
+
+    expect(result).toBe(true)
+  })
+
+  it ('gets authenticated false when token is not set', () => {
+    const state = { token: null }
+
+    const result = getters.authenticated(state)
+
+    expect(result).toBe(false)
+  })
+
+  it ('gets authenticated user', () => {
+    const state = { user: { name: 'user', email: 'user@email.com' } }
+
+    const result = getters.user(state)
+
+    expect(result).toStrictEqual({ name: 'user', email: 'user@email.com' })
+  })
+})
+
 describe('actions', () => {
   beforeEach(() => {
     moxios.install()
@@ -75,31 +101,5 @@ describe('actions', () => {
       ['SET_TOKEN', null],
       ['SET_USER', null]
     ])
-  })
-})
-
-describe('getters', () => {
-  it ('gets authenticated true when token is set', () => {
-    const state = { token: 'test' }
-
-    const result = getters.authenticated(state)
-
-    expect(result).toBe(true)
-  })
-
-  it ('gets authenticated false when token is not set', () => {
-    const state = { token: null }
-
-    const result = getters.authenticated(state)
-
-    expect(result).toBe(false)
-  })
-
-  it ('gets authenticated user', () => {
-    const state = { user: { name: 'user', email: 'user@email.com' } }
-
-    const result = getters.user(state)
-
-    expect(result).toStrictEqual({ name: 'user', email: 'user@email.com' })
   })
 })

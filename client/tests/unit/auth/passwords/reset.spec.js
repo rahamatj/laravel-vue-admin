@@ -5,17 +5,14 @@ import flushPromises from 'flush-promises'
 import moxios from 'moxios'
 
 describe ('Reset.vue', () => {
+  let wrapper
+  let testUtils
+
   beforeEach(() => {
     moxios.install()
-  })
 
-  afterEach(() => {
-    moxios.uninstall()
-  })
-
-  it ('resets password', async () => {
-    const wrapper = shallowMount(Reset)
-    const testUtils = new TestUtils(wrapper)
+    wrapper = shallowMount(Reset)
+    testUtils = new TestUtils(wrapper)
 
     moxios.stubRequest('/api/password/reset', {
       status: 200,
@@ -23,11 +20,25 @@ describe ('Reset.vue', () => {
         message: 'Your password has been reset!'
       }
     })
+  })
 
+  afterEach(() => {
+    moxios.uninstall()
+  })
+
+  it ('resets password', async () => {
     await testUtils.submit('#reset-password-form')
 
     await flushPromises()
 
     testUtils.see('Your password has been reset!')
+  })
+
+  it.only ('Login button appears after password has been reset', async () => {
+    await testUtils.submit('#reset-password-form')
+
+    await flushPromises()
+
+    testUtils.see('Login')
   })
 })

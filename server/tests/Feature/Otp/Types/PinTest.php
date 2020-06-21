@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Otp\Types;
 
-use App\Exceptions\NullStoredPinException;
+use App\Otp\Exceptions\NullStoredPinException;
 use App\Otp\Types\Pin;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

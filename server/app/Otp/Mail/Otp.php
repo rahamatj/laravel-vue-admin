@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail;
+namespace App\Otp\Mail;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -26,6 +26,6 @@ class Otp extends Mailable
     public function build()
     {
         return $this->subject(config('app.name') . ' OTP')
-            ->markdown('emails.otp');
+            ->markdown('otp::emails.otp');
     }
 }

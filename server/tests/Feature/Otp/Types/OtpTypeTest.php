@@ -2,8 +2,8 @@
 
 namespace Tests\Feature\Otp\Types;
 
-use App\Exceptions\EmptyGeneratedOtpException;
-use App\Exceptions\NullStoredOtpException;
+use App\Otp\Exceptions\EmptyGeneratedOtpException;
+use App\Otp\Exceptions\NullStoredOtpException;
 use App\Otp\Otp;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

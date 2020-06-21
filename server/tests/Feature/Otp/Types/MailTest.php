@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Otp\Types;
 
-use App\Mail\Otp;
+use App\Otp\Mail\Otp;
 use App\Otp\Types\Mail;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

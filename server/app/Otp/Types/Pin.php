@@ -2,7 +2,7 @@
 
 namespace App\Otp\Types;
 
-use App\Exceptions\NullStoredPinException;
+use App\Otp\Exceptions\NullStoredPinException;
 use Illuminate\Support\Facades\Hash;
 
 class Pin extends OtpType

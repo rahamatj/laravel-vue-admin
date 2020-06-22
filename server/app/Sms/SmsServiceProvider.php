@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Providers;
+namespace App\Sms;
 
-use App\Sms\Sms;
 use Illuminate\Support\ServiceProvider;
 
 class SmsServiceProvider extends ServiceProvider
@@ -14,6 +13,11 @@ class SmsServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->mergeConfigFrom(
+            __DIR__.'/config/sms.php',
+            'sms'
+        );
+
         $this->app->bind('sms', function ($app) {
             return new Sms(config('sms.api'));
         });
@@ -26,6 +30,6 @@ class SmsServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+
     }
 }

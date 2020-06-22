@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
-use App\Exceptions\SmsApiNotSetException;
-use App\Exceptions\SmsMessageNotSetException;
-use App\Exceptions\SmsToNotSetException;
-use App\Facades\Sms;
+use App\Sms\Exceptions\SmsApiNotSetException;
+use App\Sms\Exceptions\SmsMessageNotSetException;
+use App\Sms\Exceptions\SmsToNotSetException;
+use App\Sms\Facades\Sms;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;

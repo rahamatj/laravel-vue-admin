@@ -2,11 +2,11 @@
 
 namespace App\Sms;
 
-use App\Exceptions\SmsApiNotSetException;
-use App\Exceptions\SmsApiStringFormatException;
-use App\Exceptions\SmsMessageNotSetException;
-use App\Exceptions\SmsToNotSetException;
-use App\Jobs\SendQueuedSms;
+use App\Sms\Exceptions\SmsApiNotSetException;
+use App\Sms\Exceptions\SmsApiStringFormatException;
+use App\Sms\Exceptions\SmsMessageNotSetException;
+use App\Sms\Exceptions\SmsToNotSetException;
+use App\Sms\Jobs\SendQueuedSms;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 

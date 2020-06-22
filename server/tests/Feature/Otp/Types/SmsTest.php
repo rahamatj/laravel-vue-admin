@@ -2,7 +2,7 @@
 
 namespace Tests\Feature\Otp\Types;
 
-use App\Facades\Sms;
+use App\Sms\Facades\Sms;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;

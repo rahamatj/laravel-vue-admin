@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Sms;
+namespace App\Sms\Fakes;
 
 use PHPUnit\Framework\Assert as PHPUnit;
 
-class SmsFake
+class Sms
 {
     protected $to;
     protected $message;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Jobs;
+namespace App\Sms\Jobs;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

@@ -18,18 +18,18 @@ class AddOtpColumnsToUsersTable extends Migration
                 ->after('email');
             $table->string('google2fa_secret')
                 ->nullable()
-                ->after('is_ip_lock_enabled');
+                ->after('password');
             $table->string('pin')
-                ->after('is_ip_lock_enabled')
+                ->after('password')
                 ->nullable();
             $table->string('otp')
                 ->nullable()
-                ->after('is_ip_lock_enabled');
+                ->after('password');
             $table->enum('otp_type', ['pin', 'mail', 'sms', 'google2fa'])
                 ->default('pin')
-                ->after('is_ip_lock_enabled');
+                ->after('password');
             $table->boolean('is_otp_verification_enabled_at_login')
-                ->after('is_ip_lock_enabled');
+                ->after('password');
         });
     }
 

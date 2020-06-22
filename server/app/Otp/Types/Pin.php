@@ -7,11 +7,9 @@ use Illuminate\Support\Facades\Hash;
 
 class Pin extends OtpType
 {
-    protected $pinColumnName = 'pin';
-
     public function check($otp)
     {
-        $storedPin = $this->user->{$this->pinColumnName};
+        $storedPin = $this->user->{$this->config['pin_column_name']};
 
         if (!$storedPin)
             throw new NullStoredPinException('Stored pin is null.');

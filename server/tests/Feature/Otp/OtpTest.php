@@ -14,8 +14,10 @@ class OtpTest extends TestCase
     /** @test */
     public function returns_appropriate_otp_instance_from_users_otp_type_column()
     {
+        $otpConfig = require(__DIR__.'/../../../app/Otp/config/otp.php');
+
         $user = new User();
-        $user->otp_type = 'pin';
+        $user->{$otpConfig['otp_type_column_name']} = 'pin';
 
         $instance = Otp::type($user);
 

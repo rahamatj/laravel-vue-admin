@@ -15,154 +15,95 @@ class OtpTypeTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected $otpConfig;
+    protected $user;
+    protected $otpType;
+
+    public function setUp() : void
+    {
+        parent::setUp();
+        $this->otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
+        $this->user = factory(User::class)->create([
+            $this->otpConfig['otp_type_column_name'] => 'mail'
+        ]);
+        $this->otpType = Otp::type($this->user);
+    }
+
     /** @test */
     public function gets_otp()
     {
-        $otp = new Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
-        
-        $user = factory(User::class)->create([
-            $otpTypeColumnName => 'mail'
-        ]);
-
-        $otpType = Otp::type($user);
-
-        $otpTypeReflection = new \ReflectionClass($otpType);
-
-        $otpColumnNameReflection = $otpTypeReflection->getProperty('otpColumnName');
-        $otpColumnNameReflection->setAccessible(true);
-        $otpColumnName = $otpColumnNameReflection->getValue($otpType);
-
         $hashedOtp = Hash::make('1234');
 
-        $user->{$otpColumnName} = $hashedOtp;
-        $user->save();
+        $this->user->{$this->otpConfig['otp_column_name']} = $hashedOtp;
+        $this->user->save();
+
+        $otpTypeReflection = new \ReflectionClass($this->otpType);
 
         $getOtpReflection = $otpTypeReflection->getMethod('getOtp');
         $getOtpReflection->setAccessible(true);
 
         $this->assertEquals(
             $hashedOtp,
-            $getOtpReflection->invoke($otpType)
+            $getOtpReflection->invoke($this->otpType)
         );
     }
 
     /** @test */
     public function checks_otp()
     {
-        $otp = new Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
+        $this->user->{$this->otpConfig['otp_column_name']} = Hash::make('1234');
+        $this->user->save();
 
-        $user = factory(User::class)->create([
-            $otpTypeColumnName => 'mail'
-        ]);
-
-        $otpType = Otp::type($user);
-
-        $otpTypeReflection = new \ReflectionClass($otpType);
-
-        $otpColumnNameReflection = $otpTypeReflection->getProperty('otpColumnName');
-        $otpColumnNameReflection->setAccessible(true);
-        $otpColumnName = $otpColumnNameReflection->getValue($otpType);
-
-        $user->{$otpColumnName} = Hash::make('1234');
-        $user->save();
-
-        $this->assertTrue($otpType->check('1234'));
-        $this->assertFalse($otpType->check('1235'));
+        $this->assertTrue($this->otpType->check('1234'));
+        $this->assertFalse($this->otpType->check('1235'));
     }
 
     /** @test */
     public function throws_exception_checking_otp_if_stored_otp_is_null()
     {
-        $otp = new Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
-
-        $user = factory(User::class)->create([
-            $otpTypeColumnName => 'mail'
-        ]);
-
-        $otpType = Otp::type($user);
-
         $this->expectException(NullStoredOtpException::class);
 
-        $otpType->check('1234');
+        $this->otpType->check('1234');
     }
 
     /** @test */
     public function generates_otp()
     {
-        $otp = new Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
-
-        $user = new User();
-        $user->{$otpTypeColumnName} = 'mail';
-
-        $otpType = Otp::type($user);
-
-        $otpTypeReflection = new \ReflectionClass($otpType);
-        $generatedOtpLengthReflection = $otpTypeReflection->getProperty('generatedOtpLength');
-        $generatedOtpLengthReflection->setAccessible(true);
-        $generatedOtpLengthReflection->setValue($otpType, 8);
+        $otpTypeReflection = new \ReflectionClass($this->otpType);
 
         $generateReflection = $otpTypeReflection->getMethod('generate');
         $generateReflection->setAccessible(true);
-        $generateReflection->invoke($otpType);
+        $generateReflection->invoke($this->otpType);
 
         $generatedOtpReflection = $otpTypeReflection->getProperty('generatedOtp');
         $generatedOtpReflection->setAccessible(true);
 
-        $this->assertEquals(8, strlen($generatedOtpReflection->getValue($otpType)));
+        $this->assertEquals(
+            $this->otpConfig['generated_otp_length'],
+            strlen($generatedOtpReflection->getValue($this->otpType))
+        );
     }
 
     /** @test */
     public function stores_otp()
     {
-        $otp = new Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
-
-        $user = factory(User::class)->create([
-            $otpTypeColumnName => 'mail'
-        ]);
-
-        $otpType = Otp::type($user);
-
-        $otpTypeReflection = new \ReflectionClass($otpType);
+        $otpTypeReflection = new \ReflectionClass($this->otpType);
 
         $generateReflection = $otpTypeReflection->getMethod('generate');
         $generateReflection->setAccessible(true);
-        $generateReflection->invoke($otpType);
+        $generateReflection->invoke($this->otpType);
 
         $storeReflection = $otpTypeReflection->getMethod('store');
         $storeReflection->setAccessible(true);
-        $storeReflection->invoke($otpType);
+        $storeReflection->invoke($this->otpType);
 
         $generatedOtpReflection = $otpTypeReflection->getProperty('generatedOtp');
         $generatedOtpReflection->setAccessible(true);
 
-        $otpColumnNameReflection = $otpTypeReflection->getProperty('otpColumnName');
-        $otpColumnNameReflection->setAccessible(true);
-
-
         $this->assertTrue(
             Hash::check(
-                $generatedOtpReflection->getValue($otpType),
-                $user->{$otpColumnNameReflection->getValue($otpType)}
+                $generatedOtpReflection->getValue($this->otpType),
+                $this->user->{$this->otpConfig['otp_column_name']}
             )
         );
     }
@@ -170,24 +111,12 @@ class OtpTypeTest extends TestCase
     /** @test */
     public function throws_exception_storing_otp_if_generated_otp_is_empty()
     {
-        $otp = new Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
-
-        $user = factory(User::class)->create([
-            $otpTypeColumnName => 'mail'
-        ]);
-
-        $otpType = Otp::type($user);
-
-        $otpTypeReflection = new \ReflectionClass($otpType);
+        $otpTypeReflection = new \ReflectionClass($this->otpType);
 
         $this->expectException(EmptyGeneratedOtpException::class);
 
         $storeReflection = $otpTypeReflection->getMethod('store');
         $storeReflection->setAccessible(true);
-        $storeReflection->invoke($otpType);
+        $storeReflection->invoke($this->otpType);
     }
 }

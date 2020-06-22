@@ -6,13 +6,11 @@ use App\Otp\Mail\Otp;
 
 class Mail extends OtpType
 {
-    protected $emailColumnName = 'email';
-
     public function send()
     {
         $this->generate();
         $this->store();
-        \Illuminate\Support\Facades\Mail::to($this->user->{$this->emailColumnName})
+        \Illuminate\Support\Facades\Mail::to($this->user->{$this->config['mail_column_name']})
             ->queue(new Otp($this->generatedOtp));
     }
 }

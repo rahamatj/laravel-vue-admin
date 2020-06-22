@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('otp-mail', function () {
+    return new \App\Otp\Mail\Otp('1234');
+});

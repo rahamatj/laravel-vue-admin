@@ -17,27 +17,20 @@ class SmsTest extends TestCase
     {
         Sms::fake();
 
-        $otp = new \App\Otp\Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
+        $otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
 
         $user = factory(User::class)->create([
-            $otpTypeColumnName => 'sms',
+            $otpConfig['otp_type_column_name'] => 'sms',
         ]);
 
         $sms = new \App\Otp\Types\Sms($user);
 
-        $otpTypeReflection = new \ReflectionClass($sms);
-        $mobileNumberColumnNameReflection = $otpTypeReflection->getProperty('mobileNumberColumnName');
-        $mobileNumberColumnNameReflection->setAccessible(true);
-        $mobileNumberColumnName = $mobileNumberColumnNameReflection->getValue($sms);
-
-        $user->{$mobileNumberColumnName} = 'test';
+        $user->{$otpConfig['mobile_number_column_name']} = 'test';
         $user->save();
 
         $sms->send();
+
+        $otpTypeReflection = new \ReflectionClass($sms);
 
         $generatedOtpReflection = $otpTypeReflection->getProperty('generatedOtp');
         $generatedOtpReflection->setAccessible(true);

@@ -16,22 +16,15 @@ class Google2faTest extends TestCase
     /** @test */
     public function checks_google2fa()
     {
-        $otp = new \App\Otp\Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
+        $otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
 
         $user = factory(User::class)->create([
-            $otpTypeColumnName => 'google2fa'
+            $otpConfig['otp_type_column_name'] => 'google2fa'
         ]);
 
         $google2fa = new Google2fa($user);
 
-        $google2faReflection = new \ReflectionClass($google2fa);
-        $google2faSecretColumnNameReflection = $google2faReflection->getProperty('google2faSecretColumnName');
-        $google2faSecretColumnNameReflection->setAccessible(true);
-        $google2faSecretColumnName = $google2faSecretColumnNameReflection->getValue($google2fa);
+        $google2faSecretColumnName = $otpConfig['google2fa_secret_column_name'];
 
         $user->{$google2faSecretColumnName} = 'ADUMJO5634NPDEKW';
         $user->save();

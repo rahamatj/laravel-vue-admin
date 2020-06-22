@@ -15,16 +15,13 @@ class PinTest extends TestCase
     /** @test */
     public function checks_pin()
     {
+        $otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
+
         $user = factory(User::class)->create();
 
         $pin = new Pin($user);
 
-        $otpTypeReflection = new \ReflectionClass($pin);
-        $pinColumnNameReflection = $otpTypeReflection->getProperty('pinColumnName');
-        $pinColumnNameReflection->setAccessible(true);
-        $pinColumnName = $pinColumnNameReflection->getValue($pin);
-
-        $user->{$pinColumnName} = Hash::make('1234');
+        $user->{$otpConfig['pin_column_name']} = Hash::make('1234');
         $user->save();
 
         $this->assertTrue($pin->check('1234'));

@@ -18,14 +18,10 @@ class MailTest extends TestCase
     {
         \Illuminate\Support\Facades\Mail::fake();
 
-        $otp = new \App\Otp\Otp();
-        $otpReflection = new \ReflectionClass($otp);
-        $otpTypeColumnNameReflection = $otpReflection->getProperty('otpTypeColumnName');
-        $otpTypeColumnNameReflection->setAccessible(true);
-        $otpTypeColumnName = $otpTypeColumnNameReflection->getValue($otp);
+        $otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
 
         $user = factory(User::class)->create([
-            $otpTypeColumnName => 'mail'
+            $otpConfig['otp_type_column_name'] => 'mail'
         ]);
 
         $mail = new Mail($user);
@@ -36,14 +32,12 @@ class MailTest extends TestCase
         $generatedOtpReflection->setAccessible(true);
         $generatedOtp = $generatedOtpReflection->getValue($mail);
 
-        $emailColumnNameReflection = $otpTypeReflection->getProperty('emailColumnName');
-        $emailColumnNameReflection->setAccessible(true);
-        $emailColumnName = $emailColumnNameReflection->getValue($mail);
+        $mailColumnName = $otpConfig['mail_column_name'];
 
         \Illuminate\Support\Facades\Mail::assertQueued(
             Otp::class,
-            function ($mail) use ($user, $emailColumnName, $generatedOtp) {
-                return $mail->hasTo($user->{$emailColumnName}) &&
+            function ($mail) use ($user, $mailColumnName, $generatedOtp) {
+                return $mail->hasTo($user->{$mailColumnName}) &&
                     $mail->generatedOtp == $generatedOtp;
             }
         );

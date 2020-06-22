@@ -9,13 +9,14 @@ use Illuminate\Support\Facades\Hash;
 abstract class OtpType
 {
     protected $user;
-    protected $generatedOtpLength = 8;
-    protected $otpColumnName = 'otp';
     protected $generatedOtp = '';
+
+    protected $config;
 
     public function __construct($user)
     {
         $this->user = $user;
+        $this->config = require(__DIR__.'/../config/otp.php');
     }
 
     public function check($otp)
@@ -30,12 +31,12 @@ abstract class OtpType
 
     protected function getOtp()
     {
-        return $this->user->{$this->otpColumnName};
+        return $this->user->{$this->config['otp_column_name']};
     }
 
     protected function generate()
     {
-        for ($i = 0; $i < $this->generatedOtpLength; $i++)
+        for ($i = 0; $i < $this->config['generated_otp_length']; $i++)
             $this->generatedOtp .= rand(0, 9);
     }
 
@@ -49,7 +50,7 @@ abstract class OtpType
         if (!$this->generatedOtp)
             throw new EmptyGeneratedOtpException('Generated OTP is empty.');
 
-        $this->user->{$this->otpColumnName} = Hash::make($this->generatedOtp);
+        $this->user->{$this->config['otp_column_name']} = Hash::make($this->generatedOtp);
         $this->user->save();
     }
 }

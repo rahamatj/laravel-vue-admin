@@ -16,15 +16,13 @@ class Google2faTest extends TestCase
     /** @test */
     public function checks_google2fa()
     {
-        $otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
-
         $user = factory(User::class)->create([
-            $otpConfig['otp_type_column_name'] => 'google2fa'
+            config('otp.otp_type_column_name') => 'google2fa'
         ]);
 
         $google2fa = new Google2fa($user);
 
-        $google2faSecretColumnName = $otpConfig['google2fa_secret_column_name'];
+        $google2faSecretColumnName = config('otp.google2fa_secret_column_name');
 
         $user->{$google2faSecretColumnName} = 'ADUMJO5634NPDEKW';
         $user->save();

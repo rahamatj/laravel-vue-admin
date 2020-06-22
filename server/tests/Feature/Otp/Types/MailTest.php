@@ -18,10 +18,8 @@ class MailTest extends TestCase
     {
         \Illuminate\Support\Facades\Mail::fake();
 
-        $otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
-
         $user = factory(User::class)->create([
-            $otpConfig['otp_type_column_name'] => 'mail'
+            config('otp.otp_type_column_name') => 'mail'
         ]);
 
         $mail = new Mail($user);
@@ -32,7 +30,7 @@ class MailTest extends TestCase
         $generatedOtpReflection->setAccessible(true);
         $generatedOtp = $generatedOtpReflection->getValue($mail);
 
-        $mailColumnName = $otpConfig['mail_column_name'];
+        $mailColumnName = config('otp.mail_column_name');
 
         \Illuminate\Support\Facades\Mail::assertQueued(
             Otp::class,

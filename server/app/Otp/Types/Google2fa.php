@@ -9,7 +9,7 @@ class Google2fa extends OtpType
     public function check($otp)
     {
         return G2FA::verifyGoogle2FA(
-            $this->user->{$this->config['google2fa_secret_column_name']},
+            $this->user->{config('otp.google2fa_secret_column_name')},
             $otp
         );
     }

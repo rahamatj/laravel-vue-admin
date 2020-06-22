@@ -8,7 +8,7 @@ class Sms extends OtpType
     {
         $this->generate();
         $this->store();
-        \App\Sms\Facades\Sms::to($this->user->{$this->config['mobile_number_column_name']})
+        \App\Sms\Facades\Sms::to($this->user->{config('otp.mobile_number_column_name')})
             ->message('Your OTP is ' . $this->generatedOtp . ' - ' . config('app.name'))
             ->queue();
     }

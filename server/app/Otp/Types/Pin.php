@@ -9,7 +9,7 @@ class Pin extends OtpType
 {
     public function check($otp)
     {
-        $storedPin = $this->user->{$this->config['pin_column_name']};
+        $storedPin = $this->user->{config('otp.pin_column_name')};
 
         if (!$storedPin)
             throw new NullStoredPinException('Stored pin is null.');

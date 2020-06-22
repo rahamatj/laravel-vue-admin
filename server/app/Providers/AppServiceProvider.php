@@ -23,7 +23,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadViewsFrom(__DIR__.'/../Otp/views', 'otp');
-        $this->loadMigrationsFrom(__DIR__.'/../Otp/migrations');
+
     }
 }

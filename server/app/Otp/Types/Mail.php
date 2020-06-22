@@ -10,7 +10,7 @@ class Mail extends OtpType
     {
         $this->generate();
         $this->store();
-        \Illuminate\Support\Facades\Mail::to($this->user->{$this->config['mail_column_name']})
+        \Illuminate\Support\Facades\Mail::to($this->user->{config('otp.mail_column_name')})
             ->queue(new Otp($this->generatedOtp));
     }
 }

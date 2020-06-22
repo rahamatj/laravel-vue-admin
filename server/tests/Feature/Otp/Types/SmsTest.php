@@ -17,15 +17,13 @@ class SmsTest extends TestCase
     {
         Sms::fake();
 
-        $otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
-
         $user = factory(User::class)->create([
-            $otpConfig['otp_type_column_name'] => 'sms',
+            config('otp.otp_type_column_name') => 'sms',
         ]);
 
         $sms = new \App\Otp\Types\Sms($user);
 
-        $user->{$otpConfig['mobile_number_column_name']} = 'test';
+        $user->{config('otp.mobile_number_column_name')} = 'test';
         $user->save();
 
         $sms->send();

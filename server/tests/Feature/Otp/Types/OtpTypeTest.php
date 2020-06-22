@@ -15,16 +15,14 @@ class OtpTypeTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $otpConfig;
     protected $user;
     protected $otpType;
 
     public function setUp() : void
     {
         parent::setUp();
-        $this->otpConfig = require(__DIR__.'/../../../../app/Otp/config/otp.php');
         $this->user = factory(User::class)->create([
-            $this->otpConfig['otp_type_column_name'] => 'mail'
+            config('otp.otp_type_column_name') => 'mail'
         ]);
         $this->otpType = Otp::type($this->user);
     }
@@ -34,7 +32,7 @@ class OtpTypeTest extends TestCase
     {
         $hashedOtp = Hash::make('1234');
 
-        $this->user->{$this->otpConfig['otp_column_name']} = $hashedOtp;
+        $this->user->{config('otp.otp_column_name')} = $hashedOtp;
         $this->user->save();
 
         $otpTypeReflection = new \ReflectionClass($this->otpType);
@@ -51,7 +49,7 @@ class OtpTypeTest extends TestCase
     /** @test */
     public function checks_otp()
     {
-        $this->user->{$this->otpConfig['otp_column_name']} = Hash::make('1234');
+        $this->user->{config('otp.otp_column_name')} = Hash::make('1234');
         $this->user->save();
 
         $this->assertTrue($this->otpType->check('1234'));
@@ -79,7 +77,7 @@ class OtpTypeTest extends TestCase
         $generatedOtpReflection->setAccessible(true);
 
         $this->assertEquals(
-            $this->otpConfig['generated_otp_length'],
+            config('otp.generated_otp_length'),
             strlen($generatedOtpReflection->getValue($this->otpType))
         );
     }
@@ -103,7 +101,7 @@ class OtpTypeTest extends TestCase
         $this->assertTrue(
             Hash::check(
                 $generatedOtpReflection->getValue($this->otpType),
-                $this->user->{$this->otpConfig['otp_column_name']}
+                $this->user->{config('otp.otp_column_name')}
             )
         );
     }

@@ -9,11 +9,9 @@ class Otp
 {
     public static function type($user)
     {
-        $config = require(__DIR__.'/config/otp.php');
-
         $namespace = (new \ReflectionClass(static::class))->getNamespaceName();
 
-        $otpType = $namespace . '\\Types\\' . Str::studly($user->{$config['otp_type_column_name']});
+        $otpType = $namespace . '\\Types\\' . Str::studly($user->{config('otp.otp_type_column_name')});
 
         return new $otpType($user);
     }

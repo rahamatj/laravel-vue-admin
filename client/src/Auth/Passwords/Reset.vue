@@ -5,13 +5,15 @@
                 <b-col md="8" class="mx-auto app-login-box">
                     <b-alert :show="form.hasSuccessMessage()"
                              variant="success"
-                             v-text="form.getSuccessMessage()"
+                             dismissible
                     >
+                        {{ form.getSuccessMessage() }}
                     </b-alert>
                     <b-alert :show="form.errors.hasMessage()"
                              variant="danger"
-                             v-text="form.errors.getMessage()"
+                             dismissible
                     >
+                        {{ form.errors.getMessage() }}
                     </b-alert>
                     <div class="modal-dialog w-100 mx-auto">
                         <b-form id="reset-password-form"

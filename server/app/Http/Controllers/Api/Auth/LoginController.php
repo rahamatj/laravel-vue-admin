@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api\Auth;
 
 use App\Client;
 use App\Http\Controllers\Controller;
+use App\Otp\Otp;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
@@ -121,9 +122,18 @@ class LoginController extends Controller
             'logged_in_at' => date("Y-m-d H:i:s")
         ]);
 
+        $scopes = ['access-app'];
+
+        if ($user->is_otp_verification_enabled_at_login) {
+            Otp::send();
+            $scopes = ['verify-otp-at-login'];
+            if ($user->otp_type == 'google2fa' && !$user->is_google2fa_activated)
+                $scopes = ['activate-google2fa'];
+        }
+
         return response()->json([
             'message' => 'Login successful!',
-            'token' => $user->createToken(config('app.name'))->accessToken,
+            'token' => $user->createToken(config('app.name'), $scopes)->accessToken,
             'user' => $user->toArray()
         ]);
     }

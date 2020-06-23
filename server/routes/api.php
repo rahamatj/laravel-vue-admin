@@ -19,8 +19,18 @@ Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail
 Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::group(['middleware' => 'auth:api'], function() {
-    Route::post('/logout', 'Auth\LoginController@logout');
-    Route::get('/dashboard', function (Request $request) {
-       return $request->user();
+    Route::group(['middleware' => 'scopes:verify-otp-at-login'], function () {
+        Route::post('/checkpoint', 'Auth\CheckpointController@check');
+        Route::get('/checkpoint/resend', 'Auth\CheckpointController@resend');
+    });
+
+    Route::get('/checkpoint/google2fa/activate', 'Auth\CheckpointController@activateGoogle2fa')
+        ->middleware('scopes:activate-google2fa');
+
+    Route::group(['middleware' => 'scopes:access-app'], function () {
+        Route::post('/logout', 'Auth\LoginController@logout');
+        Route::get('/dashboard', function (Request $request) {
+            return $request->user();
+        });
     });
 });

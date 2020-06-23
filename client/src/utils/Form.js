@@ -1,5 +1,4 @@
 import Errors from './Errors';
-import axios from 'axios'
 
 export default class Form {
   /**

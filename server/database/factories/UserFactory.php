@@ -29,6 +29,7 @@ $factory->define(User::class, function (Faker $faker) {
         'is_client_lock_enabled' => 0,
         'clients_allowed' => 0,
         'is_ip_lock_enabled' => 0,
-        'is_otp_verification_enabled_at_login' => 0
+        'is_otp_verification_enabled_at_login' => 0,
+        'otp_type' => 'pin'
     ];
 });

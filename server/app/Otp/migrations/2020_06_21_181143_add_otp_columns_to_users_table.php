@@ -41,10 +41,12 @@ class AddOtpColumnsToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('mobile_number');
             $table->dropColumn('is_otp_verification_enabled_at_login');
             $table->dropColumn('otp_type');
             $table->dropColumn('otp');
             $table->dropColumn('pin');
+            $table->dropColumn('google2fa_secret');
         });
     }
 }

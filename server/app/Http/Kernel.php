@@ -66,5 +66,9 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'scopes' => \Laravel\Passport\Http\Middleware\CheckScopes::class,
         'scope' => \Laravel\Passport\Http\Middleware\CheckForAnyScope::class,
+        'verify-otp-at-login' => \App\Otp\Middleware\VerifyOtpAtLogin::class,
+        'activate-google2fa' => \App\Otp\Middleware\ActivateGoogle2fa::class,
+        'google2fa-is-not-activated' => \App\Otp\Middleware\Google2faIsNotActivated::class,
+        'access-app' => \App\Otp\Middleware\AccessApp::class
     ];
 }

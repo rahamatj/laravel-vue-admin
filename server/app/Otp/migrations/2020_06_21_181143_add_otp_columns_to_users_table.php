@@ -19,6 +19,9 @@ class AddOtpColumnsToUsersTable extends Migration
             $table->string('google2fa_secret')
                 ->nullable()
                 ->after('password');
+            $table->boolean('is_google2fa_activated')
+                ->default(false)
+                ->after('password');
             $table->string('pin')
                 ->after('password')
                 ->nullable();
@@ -46,6 +49,7 @@ class AddOtpColumnsToUsersTable extends Migration
             $table->dropColumn('otp_type');
             $table->dropColumn('otp');
             $table->dropColumn('pin');
+            $table->dropColumn('is_google2fa_activated');
             $table->dropColumn('google2fa_secret');
         });
     }

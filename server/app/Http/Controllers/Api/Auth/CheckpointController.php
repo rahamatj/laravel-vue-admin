@@ -13,18 +13,18 @@ class CheckpointController extends Controller
     public function check(Request $request)
     {
         $request->validate([
-            'otp' => 'required|string'
+            'otp' => 'required|string',
+            'fingerprint' => 'required|string'
         ]);
 
-        if (!Otp::check($request->otp)) {
+        if (! Otp::verify($request->otp, $request->fingerprint)) {
             return response()->json([
                'message' => 'Your OTP didn\'t match.'
             ], 422);
         }
 
         return response()->json([
-            'message' => 'OTP verified successfully!',
-            'token' => $request->user()->createToken(config('app.name'), ['access-app'])->accessToken
+            'message' => 'OTP verified successfully!'
         ]);
     }
 
@@ -54,8 +54,7 @@ class CheckpointController extends Controller
         );
 
         return response()->json([
-            'g2faUrl' => $g2faUrl,
-            'token' => $user->createToken(config('app.name'), ['verify-otp-at-login'])->accessToken
+            'g2faUrl' => $g2faUrl
         ]);
     }
 }

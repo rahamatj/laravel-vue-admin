@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddIsGoogle2faActivatedColumnToUsersTable extends Migration
+class AddIsOtpVerifiedAtLoginColumnToClientsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class AddIsGoogle2faActivatedColumnToUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_google2fa_activated')
+        Schema::table('clients', function (Blueprint $table) {
+            $table->boolean('is_otp_verified_at_login')
                 ->default(false)
-                ->after('pin');
+                ->after('ip');
         });
     }
 
@@ -27,8 +27,8 @@ class AddIsGoogle2faActivatedColumnToUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('is_google2fa_activated');
+        Schema::table('clients', function (Blueprint $table) {
+            $table->dropColumn('is_otp_verified_at_login');
         });
     }
 }

@@ -7,5 +7,5 @@ return [
     'pin_column_name' => 'pin',
     'mail_column_name' => 'email',
     'mobile_number_column_name' => 'mobile_number',
-    'google2fa_secret_column_name' => 'google2fa_secret'
+    'google2fa_secret_column_name' => 'google2fa_secret',
 ];

@@ -71,175 +71,53 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function can_verify_otp_if_otp_verification_at_login_is_enabled()
-    {
-        $user = factory(User::class)->create([
-            'is_otp_verification_enabled_at_login' => true,
-            'otp_type' => 'pin',
-            'pin' => Hash::make('1234')
-        ]);
-
-        $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email
-        ]));
-
-        $token = $response->getOriginalContent()['token'];
-
-        $response = $this->json('post', '/api/checkpoint', [
-            'otp' => '1234'
-        ], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertOk();
-    }
-
-    /** @test */
-    public function can_not_verify_otp_if_otp_verification_at_login_is_disabled()
-    {
-        $user = factory(User::class)->create([
-            'otp_type' => 'pin',
-            'pin' => Hash::make('1234')
-        ]);
-
-        $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email
-        ]));
-
-        $token = $response->getOriginalContent()['token'];
-
-        $response = $this->json('post', '/api/checkpoint', [
-            'otp' => '1234'
-        ], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertForbidden();
-    }
-
-    /** @test */
-    public function can_activate_google2fa_if_otp_verification_at_login_is_enabled_and_otp_type_is_google2fa_and_google2fa_has_not_been_activated()
-    {
-        $user = factory(User::class)->create([
-            'is_otp_verification_enabled_at_login' => true,
-            'otp_type' => 'google2fa'
-        ]);
-
-        $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email
-        ]));
-
-        $token = $response->getOriginalContent()['token'];
-
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertOk();
-    }
-
-    /** @test */
-    public function can_not_activate_google2fa_if_otp_verification_at_login_is_disabled()
-    {
-        $user = factory(User::class)->create([
-            'is_otp_verification_enabled_at_login' => false,
-            'otp_type' => 'google2fa'
-        ]);
-
-        $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email
-        ]));
-
-        $token = $response->getOriginalContent()['token'];
-
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertForbidden();
-    }
-
-    /** @test */
-    public function can_not_activate_google2fa_if_otp_verification_at_login_is_enabled_and_otp_type_is_not_google2fa()
-    {
-        $user = factory(User::class)->create([
-            'is_otp_verification_enabled_at_login' => false,
-            'otp_type' => 'pin'
-        ]);
-
-        $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email
-        ]));
-
-        $token = $response->getOriginalContent()['token'];
-
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertForbidden();
-    }
-
-    /** @test */
-    public function can_not_activate_google2fa_if_otp_verification_at_login_is_enabled_and_otp_type_is_google2fa_and_google2fa_has_already_been_activated()
-    {
-        $user = factory(User::class)->create([
-            'is_otp_verification_enabled_at_login' => false,
-            'otp_type' => 'google2fa',
-            'is_google2fa_activated' => true
-        ]);
-
-        $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email
-        ]));
-
-        $token = $response->getOriginalContent()['token'];
-
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertForbidden();
-    }
-
-    /** @test */
-    public function can_not_activate_google2fa_if_otp_verification_at_login_is_enabled_and_otp_type_is_not_google2fa_and_google2fa_has_already_been_activated()
-    {
-        $user = factory(User::class)->create([
-            'is_otp_verification_enabled_at_login' => false,
-            'otp_type' => 'pin',
-            'is_google2fa_activated' => true
-        ]);
-
-        $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email
-        ]));
-
-        $token = $response->getOriginalContent()['token'];
-
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
-            'Authorization' => 'Bearer ' . $token
-        ]);
-
-        $response->assertForbidden();
-    }
-
-    /** @test */
     public function user_can_access_dashboard_with_access_token()
     {
         $user = factory(User::class)->create();
 
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
         ]));
 
         $token = $response->getOriginalContent()['token'];
 
-        $response = $this->json('get', '/api/dashboard', [], [
+        $response = $this->json('get', '/api/dashboard', [
+            'fingerprint' => $client->fingerprint
+        ], [
             'Authorization' => 'Bearer ' . $token
         ]);
 
         $response->assertOk();
+    }
+
+    /** @test */
+    public function user_can_not_access_dashboard_with_access_token_if_otp_verification_at_login_is_enabled_and_otp_has_not_been_verified()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true
+        ]);
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->json('post', '/api/login', $this->requestData([
+            'email' => $user->email
+        ]));
+
+        $token = $response->getOriginalContent()['token'];
+
+        $response = $this->json('get', '/api/dashboard', [
+            'fingerprint' => $client->fingerprint
+        ], [
+            'Authorization' => 'Bearer ' . $token
+        ]);
+
+        $response->assertForbidden();
     }
 
     /** @test */
@@ -509,13 +387,19 @@ class LoginTest extends TestCase
     {
         $user = factory(User::class)->create();
 
+        $client = factory(Client::class)->create([
+           'user_id' => $user->id
+        ]);
+
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
         ]));
 
         $token = $response->getOriginalContent()['token'];
 
-        $response = $this->json('post', '/api/logout', [], [
+        $response = $this->json('post', '/api/logout', [
+            'fingerprint' => $client->fingerprint
+        ], [
             'Authorization' => 'Bearer ' . $token
         ]);
 

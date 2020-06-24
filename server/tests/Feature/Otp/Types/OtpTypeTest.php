@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Otp\Types;
 
+use App\Client;
+use App\Otp\Exceptions\ClientNotFoundException;
 use App\Otp\Exceptions\EmptyGeneratedOtpException;
 use App\Otp\Exceptions\NullStoredOtpException;
 use App\Otp\Otp;
@@ -116,5 +118,47 @@ class OtpTypeTest extends TestCase
         $storeReflection = $otpTypeReflection->getMethod('store');
         $storeReflection->setAccessible(true);
         $storeReflection->invoke($this->otpType);
+    }
+
+    /** @test */
+    public function verifies_otp()
+    {
+        $this->user->{config('otp.otp_column_name')} = Hash::make('1234');
+        $this->user->save();
+
+        $client = factory(Client::class)->create([
+            'user_id' => $this->user->id
+        ]);
+
+        $this->otpType->verify('1234', $client->fingerprint);
+
+        $updatedClient = Client::where([
+            ['user_id', $this->user->id],
+            ['fingerprint', $client->fingerprint]
+        ])->first();
+
+        $this->assertEquals(1, $updatedClient->is_otp_verified_at_login);
+    }
+
+    /** @test */
+    public function returns_true_if_otp_has_been_verified()
+    {
+        $client = factory(Client::class)->create([
+            'user_id' => $this->user->id,
+            'is_otp_verified_at_login' => true
+        ]);
+
+        $this->assertEquals(
+            1,
+            $this->otpType->hasBeenVerifiedAtLogin($client->fingerprint)
+        );
+    }
+
+    /** @test */
+    public function throws_exception_if_client_is_not_found()
+    {
+        $this->expectException(ClientNotFoundException::class);
+
+        $this->otpType->hasBeenVerifiedAtLogin('test');
     }
 }

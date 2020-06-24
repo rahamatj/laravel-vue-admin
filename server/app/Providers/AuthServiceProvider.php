@@ -29,11 +29,5 @@ class AuthServiceProvider extends ServiceProvider
         Passport::routes(function ($router) {
            $router->forAccessTokens();
         });
-
-        Passport::tokensCan([
-            'access-app' => 'Access app',
-            'verify-otp-at-login' => 'Verify OTP at login',
-            'activate-google2fa' => 'Activate google two factor authentication'
-        ]);
     }
 }

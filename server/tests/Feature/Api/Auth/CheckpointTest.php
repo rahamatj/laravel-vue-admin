@@ -2,6 +2,8 @@
 
 namespace Tests\Feature\Api\Auth;
 
+use App\Client;
+use Google2FA;
 use App\Otp\Mail\Otp;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -23,7 +25,75 @@ class CheckpointTest extends TestCase
     }
 
     /** @test */
-    public function shows_error_if_token_does_not_have_proper_scope()
+    public function shows_error_verifying_otp_if_no_otp_is_given()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'pin' => Hash::make('1234')
+        ]);
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        Passport::actingAs($user);
+
+        $response = $this->json('post', '/api/checkpoint', [
+            'fingerprint' => $client->fingerprint
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'message' => 'The given data was invalid.',
+            'errors' =>  [
+                'otp' => ['The otp field is required.']
+            ]
+        ]);
+    }
+
+    /** @test */
+    public function shows_error_verifying_otp_if_no_fingerprint_is_given()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'pin' => Hash::make('1234')
+        ]);
+
+        Passport::actingAs($user);
+
+        $response = $this->json('post', '/api/checkpoint', [
+            'otp' => '1234'
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'message' => 'Client fingerprint is required.',
+        ]);
+    }
+
+    /** @test */
+    public function shows_error_verifying_otp_if_fingerprint_does_not_match()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'pin' => Hash::make('1234')
+        ]);
+
+        Passport::actingAs($user);
+
+        $response = $this->json('post', '/api/checkpoint', [
+            'otp' => '1234',
+            'fingerprint' => 'test'
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'message' => 'Client not found.',
+        ]);
+    }
+
+    /** @test */
+    public function shows_error_verifying_otp_if_otp_verification_at_login_is_disabled()
     {
         $user = factory(User::class)->create([
             'pin' => Hash::make('1234')
@@ -32,68 +102,112 @@ class CheckpointTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' =>  '1234'
+            'otp' => '1234',
+            'fingerprint' => 'test'
         ]);
 
-        $response->assertForbidden();
-        $response->assertJsonFragment([
-            'message' => 'Invalid scope(s) provided.'
-        ]);
-    }
-
-    /** @test */
-    public function validates_otp()
-    {
-        $user = factory(User::class)->create([
-            'pin' => Hash::make('1234')
-        ]);
-
-        Passport::actingAs($user, ['verify-otp-at-login']);
-
-        $response = $this->json('post', '/api/checkpoint', [
-            'otp' =>  ''
-        ]);
-
-        $response->assertStatus(422);
+        $response->assertStatus(403);
         $response->assertJson([
-            'message' => 'The given data was invalid.',
-            'errors' =>  [
-                'otp' => ['The otp field is required.'],
-            ]
+            'message' => 'Forbidden.',
         ]);
     }
 
     /** @test */
-    public function checks_otp_and_returns_a_token_if_otp_matches()
+    public function shows_error_verifying_otp_if_otp_has_already_been_verified()
     {
         $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
             'pin' => Hash::make('1234')
         ]);
 
-        Passport::actingAs($user, ['verify-otp-at-login']);
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id,
+            'is_otp_verified_at_login' => true
+        ]);
+
+        Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-           'otp' =>  '1234'
+            'otp' => '1234',
+            'fingerprint' => $client->fingerprint
+        ]);
+
+        $response->assertStatus(403);
+        $response->assertJson([
+            'message' => 'Forbidden.',
+        ]);
+    }
+
+    /** @test */
+    public function shows_error_verifying_otp_if_otp_type_is_google2fa_and_google2fa_has_not_been_activated()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'otp_type' => 'google2fa'
+        ]);
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        Passport::actingAs($user);
+
+        $response = $this->json('post', '/api/checkpoint', [
+            'otp' => '1234',
+            'fingerprint' => $client->fingerprint
+        ]);
+
+        $response->assertStatus(403);
+        $response->assertJson([
+            'message' => 'Forbidden.',
+        ]);
+    }
+
+    /** @test */
+    public function checkpoint_verifies_otp()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'pin' => Hash::make('1234')
+        ]);
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        Passport::actingAs($user);
+
+        $response = $this->json('post', '/api/checkpoint', [
+            'otp' =>  '1234',
+            'fingerprint' => $client->fingerprint
         ]);
 
         $response->assertOk();
-        $response->assertJsonStructure([
-            'message',
-            'token'
+        $response->assertJson([
+            'message' => 'OTP verified successfully!'
         ]);
+
+        $updatedClient = Client::find($client->id);
+        $this->assertEquals(1, $updatedClient->is_otp_verified_at_login);
     }
 
     /** @test */
-    public function checks_otp_and_does_not_return_a_token_if_otp_does_not_match()
+    public function shows_error_if_otp_does_not_match()
     {
         $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
             'pin' => Hash::make('1234')
         ]);
 
-        Passport::actingAs($user, ['verify-otp-at-login']);
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' =>  '1235'
+            'otp' =>  '1235',
+            'fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);
@@ -108,12 +222,19 @@ class CheckpointTest extends TestCase
         Mail::fake();
 
         $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
             'otp_type' => 'mail'
         ]);
 
-        Passport::actingAs($user, ['verify-otp-at-login']);
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
 
-        $response = $this->json('get', '/api/checkpoint/resend');
+        Passport::actingAs($user);
+
+        $response = $this->json('post', '/api/checkpoint/resend', [
+            'fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         $response->assertJson([
@@ -128,18 +249,78 @@ class CheckpointTest extends TestCase
     }
 
     /** @test */
-    public function enables_google2fa()
+    public function activates_google2fa()
     {
-        $user = factory(User::class)->create();
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'otp_type' => 'google2fa'
+        ]);
 
-        Passport::actingAs($user, ['activate-google2fa']);
+        $client = factory(Client::class)->create([
+           'user_id' => $user->id
+        ]);
 
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate');
+        Passport::actingAs($user);
+
+        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [
+            'fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
-            'g2faUrl',
-            'token'
+            'g2faUrl'
+        ]);
+
+        $updatedUser = User::find($user->id);
+        $this->assertEquals(1, $updatedUser->is_google2fa_activated);
+    }
+
+    /** @test */
+    public function shows_error_activating_google2fa_if_it_has_already_been_activated()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'otp_type' => 'google2fa',
+            'is_google2fa_activated' => true
+        ]);
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        Passport::actingAs($user);
+
+        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [
+            'fingerprint' => $client->fingerprint
+        ]);
+
+        $response->assertForbidden();
+        $response->assertJson([
+            'message' => 'Forbidden.'
+        ]);
+    }
+
+    /** @test */
+    public function shows_error_activating_google2fa_if_otp_type_is_not_google2fa()
+    {
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true,
+            'otp_type' => 'pin',
+        ]);
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        Passport::actingAs($user);
+
+        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [
+            'fingerprint' => $client->fingerprint
+        ]);
+
+        $response->assertForbidden();
+        $response->assertJson([
+            'message' => 'Forbidden.'
         ]);
     }
 }

@@ -114,26 +114,22 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
-        Client::updateOrcreate(['fingerprint' => $request->fingerprint], [
-            'user_id' => $user->id,
+        Client::updateOrcreate([
+            'fingerprint' => $request->fingerprint,
+            'user_id' => $user->id
+        ], [
             'client' => $request->client,
             'platform' => $request->platform,
             'ip' => $request->getClientIp(),
             'logged_in_at' => date("Y-m-d H:i:s")
         ]);
 
-        $scopes = ['access-app'];
-
-        if ($user->is_otp_verification_enabled_at_login) {
+        if ($user->is_otp_verification_enabled_at_login)
             Otp::send();
-            $scopes = ['verify-otp-at-login'];
-            if ($user->otp_type == 'google2fa' && !$user->is_google2fa_activated)
-                $scopes = ['activate-google2fa'];
-        }
 
         return response()->json([
             'message' => 'Login successful!',
-            'token' => $user->createToken(config('app.name'), $scopes)->accessToken,
+            'token' => $user->createToken(config('app.name'))->accessToken,
             'user' => $user->toArray()
         ]);
     }

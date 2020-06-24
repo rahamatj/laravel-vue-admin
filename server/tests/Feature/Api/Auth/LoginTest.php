@@ -85,10 +85,9 @@ class LoginTest extends TestCase
 
         $token = $response->getOriginalContent()['token'];
 
-        $response = $this->json('get', '/api/dashboard', [
-            'fingerprint' => $client->fingerprint
-        ], [
-            'Authorization' => 'Bearer ' . $token
+        $response = $this->json('get', '/api/dashboard', [], [
+            'Authorization' => 'Bearer ' . $token,
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertOk();
@@ -111,10 +110,9 @@ class LoginTest extends TestCase
 
         $token = $response->getOriginalContent()['token'];
 
-        $response = $this->json('get', '/api/dashboard', [
-            'fingerprint' => $client->fingerprint
-        ], [
-            'Authorization' => 'Bearer ' . $token
+        $response = $this->json('get', '/api/dashboard', [], [
+            'Authorization' => 'Bearer ' . $token,
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertForbidden();
@@ -397,10 +395,9 @@ class LoginTest extends TestCase
 
         $token = $response->getOriginalContent()['token'];
 
-        $response = $this->json('post', '/api/logout', [
-            'fingerprint' => $client->fingerprint
-        ], [
-            'Authorization' => 'Bearer ' . $token
+        $response = $this->json('post', '/api/logout', [], [
+            'Authorization' => 'Bearer ' . $token,
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertNoContent();

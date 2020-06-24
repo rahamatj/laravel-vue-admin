@@ -13,11 +13,10 @@ class CheckpointController extends Controller
     public function check(Request $request)
     {
         $request->validate([
-            'otp' => 'required|string',
-            'fingerprint' => 'required|string'
+            'otp' => 'required|string'
         ]);
 
-        if (! Otp::verify($request->otp, $request->fingerprint)) {
+        if (! Otp::verify($request->otp, $request->header('fingerprint'))) {
             return response()->json([
                'message' => 'Your OTP didn\'t match.'
             ], 422);

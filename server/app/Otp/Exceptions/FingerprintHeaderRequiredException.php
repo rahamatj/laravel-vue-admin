@@ -4,7 +4,7 @@ namespace App\Otp\Exceptions;
 
 use Exception;
 
-class ClientFingerprintRequiredException extends Exception
+class FingerprintHeaderRequiredException extends Exception
 {
     public function render($request)
     {

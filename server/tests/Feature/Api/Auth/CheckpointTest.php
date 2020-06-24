@@ -38,8 +38,8 @@ class CheckpointTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->json('post', '/api/checkpoint', [
-            'fingerprint' => $client->fingerprint
+        $response = $this->json('post', '/api/checkpoint', [], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);
@@ -52,7 +52,7 @@ class CheckpointTest extends TestCase
     }
 
     /** @test */
-    public function shows_error_verifying_otp_if_no_fingerprint_is_given()
+    public function shows_error_verifying_otp_if_no_fingerprint_header_was_attached()
     {
         $user = factory(User::class)->create([
             'is_otp_verification_enabled_at_login' => true,
@@ -67,7 +67,7 @@ class CheckpointTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJson([
-            'message' => 'Client fingerprint is required.',
+            'message' => 'Fingerprint header is required.',
         ]);
     }
 
@@ -82,8 +82,9 @@ class CheckpointTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' => '1234',
-            'fingerprint' => 'test'
+            'otp' => '1234'
+        ], [
+            'Fingerprint' => 'test'
         ]);
 
         $response->assertStatus(422);
@@ -102,8 +103,9 @@ class CheckpointTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' => '1234',
-            'fingerprint' => 'test'
+            'otp' => '1234'
+        ], [
+            'Fingerprint' => 'test'
         ]);
 
         $response->assertStatus(403);
@@ -128,8 +130,9 @@ class CheckpointTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' => '1234',
-            'fingerprint' => $client->fingerprint
+            'otp' => '1234'
+        ], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(403);
@@ -153,8 +156,9 @@ class CheckpointTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' => '1234',
-            'fingerprint' => $client->fingerprint
+            'otp' => '1234'
+        ], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(403);
@@ -178,8 +182,9 @@ class CheckpointTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' =>  '1234',
-            'fingerprint' => $client->fingerprint
+            'otp' =>  '1234'
+        ], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertOk();
@@ -206,8 +211,9 @@ class CheckpointTest extends TestCase
         Passport::actingAs($user);
 
         $response = $this->json('post', '/api/checkpoint', [
-            'otp' =>  '1235',
-            'fingerprint' => $client->fingerprint
+            'otp' =>  '1235'
+        ], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);
@@ -232,8 +238,8 @@ class CheckpointTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->json('post', '/api/checkpoint/resend', [
-            'fingerprint' => $client->fingerprint
+        $response = $this->json('get', '/api/checkpoint/resend', [], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertOk();
@@ -262,8 +268,8 @@ class CheckpointTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [
-            'fingerprint' => $client->fingerprint
+        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertOk();
@@ -290,8 +296,8 @@ class CheckpointTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [
-            'fingerprint' => $client->fingerprint
+        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertForbidden();
@@ -314,8 +320,8 @@ class CheckpointTest extends TestCase
 
         Passport::actingAs($user);
 
-        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [
-            'fingerprint' => $client->fingerprint
+        $response = $this->json('get', '/api/checkpoint/google2fa/activate', [], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertForbidden();

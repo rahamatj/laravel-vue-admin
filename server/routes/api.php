@@ -22,7 +22,7 @@ Route::group(['middleware' => 'auth:api'], function() {
     Route::group(['middleware' => 'verify-otp-at-login'], function () {
         Route::group(['middleware' => 'google2fa-is-not-activated'], function () {
             Route::post('/checkpoint', 'Auth\CheckpointController@check');
-            Route::post('/checkpoint/resend', 'Auth\CheckpointController@resend');
+            Route::get('/checkpoint/resend', 'Auth\CheckpointController@resend');
         });
 
         Route::get('/checkpoint/google2fa/activate', 'Auth\CheckpointController@activateGoogle2fa')

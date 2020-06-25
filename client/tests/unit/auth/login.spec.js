@@ -30,7 +30,7 @@ describe ('Login.vue', () => {
 
     expect(mutations.SET_FINGERPRINT).toHaveBeenCalled()
   })
-  
+
   it ('authenticates and redirects to dashboard', async () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)

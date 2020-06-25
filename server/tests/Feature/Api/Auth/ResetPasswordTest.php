@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Api\Auth;
 
-use App\Client;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -20,17 +19,11 @@ class ResetPasswordTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $client = factory(Client::class)->create([
-            'user_id' => $user->id
-        ]);
-
         $response = $this->json('post', '/api/password/reset', [
             'email' => $user->email,
             'password' => '12345678',
             'password_confirmation' => '12345678',
             'token' => Password::broker()->createToken($user)
-        ], [
-            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertOk();
@@ -44,19 +37,11 @@ class ResetPasswordTest extends TestCase
      */
     public function user_can_not_reset_password_without_required_credentials()
     {
-        $user = factory(User::class)->create();
-
-        $client = factory(Client::class)->create([
-            'user_id' => $user->id
-        ]);
-
         $response = $this->json('post', '/api/password/reset', [
             'email' => '',
             'password' => '',
             'password_confirmation' => '',
             'token' => ''
-        ], [
-            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);
@@ -77,17 +62,11 @@ class ResetPasswordTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $client = factory(Client::class)->create([
-            'user_id' => $user->id
-        ]);
-
         $response = $this->json('post', '/api/password/reset', [
             'email' => 'admin@email.com',
             'password' => '12345678',
             'password_confirmation' => '12345678',
             'token' => Password::broker()->createToken($user)
-        ], [
-            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);
@@ -106,17 +85,11 @@ class ResetPasswordTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $client = factory(Client::class)->create([
-            'user_id' => $user->id
-        ]);
-
         $response = $this->json('post', '/api/password/reset', [
             'email' => $user->email,
             'password' => '1234',
             'password_confirmation' => '1234',
             'token' => Password::broker()->createToken($user)
-        ], [
-            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);
@@ -135,17 +108,11 @@ class ResetPasswordTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $client = factory(Client::class)->create([
-            'user_id' => $user->id
-        ]);
-
         $response = $this->json('post', '/api/password/reset', [
             'email' => $user->email,
             'password' => '12345678',
             'password_confirmation' => '123456789',
             'token' => Password::broker()->createToken($user)
-        ], [
-            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);

@@ -14,10 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
+Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
+
 Route::group(['middleware' => 'fingerprint-header-required'], function () {
     Route::post('/login', 'Auth\LoginController@login');
-    Route::post('/password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail');
-    Route::post('/password/reset', 'Auth\ResetPasswordController@reset');
 
     Route::group(['middleware' => 'auth:api'], function() {
         Route::group(['middleware' => 'verify-otp-at-login'], function () {

@@ -5,24 +5,6 @@ import Form from "../../../../../src/utils/Form";
 
 const { mutations, actions, getters } = login
 
-describe ('mutations', () => {
-  let state;
-
-  beforeEach(() => {
-    state = { token: null, user: null }
-  })
-
-  it ('sets token', () => {
-    mutations.SET_TOKEN(state, 'test')
-    expect(state.token).toBe('test')
-  })
-
-  it ('sets user', () => {
-    mutations.SET_USER(state, { name: 'user', email: 'user@email.com' })
-    expect(state.user).toStrictEqual({ name: 'user', email: 'user@email.com' })
-  })
-})
-
 describe('getters', () => {
   it ('gets authenticated true when token is set', () => {
     const state = { token: 'test' }
@@ -47,9 +29,58 @@ describe('getters', () => {
 
     expect(result).toStrictEqual({ name: 'user', email: 'user@email.com' })
   })
+
+  it ('gets fingerprint', () => {
+    const state = { fingerprint: 'test' }
+
+    const result = getters.fingerprint(state)
+
+    expect(result).toBe('test')
+  })
+
+  it ('gets if otp is verified at login', () => {
+    const state = { isOtpVerifiedAtLogin: true }
+
+    const result = getters.isOtpVerifiedAtLogin(state)
+
+    expect(result).toBe(true)
+  })
+})
+
+describe ('mutations', () => {
+  let state;
+
+  beforeEach(() => {
+    state = { token: null, user: null, fingerprint: null, isOtpVerifiedAtLogin: false }
+  })
+
+  it ('sets token', () => {
+    mutations.SET_TOKEN(state, 'test')
+
+    expect(state.token).toBe('test')
+  })
+
+  it ('sets user', () => {
+    mutations.SET_USER(state, { name: 'user', email: 'user@email.com' })
+
+    expect(state.user).toStrictEqual({ name: 'user', email: 'user@email.com' })
+  })
+
+  it ('sets fingerprint', () => {
+    mutations.SET_FINGERPRINT(state, 'test')
+
+    expect(state.fingerprint).toBe('test')
+  })
+
+  it ('sets is otp verified at login', () => {
+    mutations.SET_IS_OTP_VERIFIED_AT_LOGIN(state, true)
+
+    expect(state.isOtpVerifiedAtLogin).toBe(true)
+  })
 })
 
 describe('actions', () => {
+  window.axios = require('axios')
   beforeEach(() => {
     moxios.install()
   })

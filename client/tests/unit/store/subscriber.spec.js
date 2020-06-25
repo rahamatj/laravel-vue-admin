@@ -2,6 +2,8 @@ import store from '@/store'
 require('@/store/subscriber')
 
 describe ('subscriber', () => {
+  window.axios = require('axios')
+
   beforeEach(() => {
     localStorage.clear()
   })
@@ -28,5 +30,17 @@ describe ('subscriber', () => {
     store.commit('login/SET_USER', null)
 
     expect(localStorage.getItem('user')).toBe(null)
+  })
+
+  it ('stores fingerprint to local storage', () => {
+    store.commit('login/SET_FINGERPRINT', 'test')
+
+    expect(localStorage.getItem('fingerprint')).toBe('test')
+  })
+
+  it ('removes fingerprint from local storage if payload is null', () => {
+    store.commit('login/SET_FINGERPRINT', null)
+
+    expect(localStorage.getItem('fingerprint')).toBe(null)
   })
 })

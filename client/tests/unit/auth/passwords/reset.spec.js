@@ -7,6 +7,7 @@ import moxios from 'moxios'
 describe ('Reset.vue', () => {
   let wrapper
   let testUtils
+  window.axios = require('axios')
 
   beforeEach(() => {
     moxios.install()

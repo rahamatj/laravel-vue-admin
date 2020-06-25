@@ -92,7 +92,7 @@
 
 <script>
   import Form from '@/utils/Form'
-  import {mapActions} from 'vuex'
+  import {mapActions, mapMutations} from 'vuex'
   import Fingerprint2 from 'fingerprintjs2'
 
   export default {
@@ -111,6 +111,7 @@
     },
     methods: {
       ...mapActions('login', ['authenticate']),
+      ...mapMutations('login', ['SET_FINGERPRINT']),
       login() {
         this.authenticate(this.form)
             .then(data => {
@@ -141,6 +142,8 @@
 
           const values = components.map(function (component) { return component.value });
           this.form.fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
+
+          this.SET_FINGERPRINT(this.form.fingerprint)
         })
       }
     },

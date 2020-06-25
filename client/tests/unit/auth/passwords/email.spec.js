@@ -5,6 +5,7 @@ import moxios from 'moxios'
 import flushPromises from 'flush-promises'
 
 describe ('Email.vue', () => {
+  window.axios = require('axios')
   beforeEach(() => {
     moxios.install()
   })

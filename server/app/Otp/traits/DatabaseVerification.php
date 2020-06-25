@@ -27,7 +27,7 @@ trait DatabaseVerification
         $client->save();
     }
 
-    public function hasBeenVerifiedAtLogin($fingerprint)
+    public function isVerifiedAtLogin($fingerprint)
     {
         $client = Client::where([
             ['user_id', $this->user->id],

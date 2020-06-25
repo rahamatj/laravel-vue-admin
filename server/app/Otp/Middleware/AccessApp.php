@@ -22,7 +22,7 @@ class AccessApp
             throw new FingerprintHeaderRequiredException('Fingerprint header is required.');
 
         if (Auth::user()->is_otp_verification_enabled_at_login
-            && ! Otp::hasBeenVerifiedAtLogin($fingerprint))
+            && ! Otp::isVerifiedAtLogin($fingerprint))
             return response()->json([
                 'message' => 'Forbidden.'
             ], 403);

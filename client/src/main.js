@@ -10,9 +10,12 @@ import Pages from './Layout/Wrappers/pagesLayout.vue';
 
 import store from './store'
 
+window.axios = require('axios');
+
 require('@/store/subscriber')
 
 store.commit('login/SET_TOKEN', localStorage.getItem('token'))
+store.commit('login/SET_FINGERPRINT', localStorage.getItem('fingerprint'))
 store.commit('login/SET_USER', JSON.parse(localStorage.getItem('user')))
 
 Vue.config.productionTip = false;
@@ -31,9 +34,6 @@ router.beforeEach((to, from, next) => {
   document.title = title
   next()
 })
-
-window.axios = require('axios');
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 new Vue({
   el: '#app',

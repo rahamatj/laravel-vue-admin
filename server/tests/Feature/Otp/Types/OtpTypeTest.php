@@ -150,7 +150,7 @@ class OtpTypeTest extends TestCase
 
         $this->assertEquals(
             1,
-            $this->otpType->hasBeenVerifiedAtLogin($client->fingerprint)
+            $this->otpType->isVerifiedAtLogin($client->fingerprint)
         );
     }
 
@@ -159,6 +159,6 @@ class OtpTypeTest extends TestCase
     {
         $this->expectException(ClientNotFoundException::class);
 
-        $this->otpType->hasBeenVerifiedAtLogin('test');
+        $this->otpType->isVerifiedAtLogin('test');
     }
 }

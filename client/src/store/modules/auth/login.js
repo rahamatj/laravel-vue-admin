@@ -2,7 +2,9 @@ export default {
   namespaced: true,
   state: {
     token: null,
-    user: null
+    user: null,
+    fingerprint: null,
+    isOtpVerifiedAtLogin: false,
   },
   getters: {
     authenticated (state) {
@@ -10,6 +12,12 @@ export default {
     },
     user (state) {
       return state.user
+    },
+    fingerprint (state) {
+      return state.fingerprint
+    },
+    isOtpVerifiedAtLogin (state) {
+      return state.isOtpVerifiedAtLogin
     }
   },
   mutations: {
@@ -18,6 +26,12 @@ export default {
     },
     SET_USER (state, user) {
       state.user = user
+    },
+    SET_FINGERPRINT (state, fingerprint) {
+      state.fingerprint = fingerprint
+    },
+    SET_IS_OTP_VERIFIED_AT_LOGIN (state, isOtpVerifiedAtLogin) {
+      state.isOtpVerifiedAtLogin = isOtpVerifiedAtLogin
     }
   },
   actions: {

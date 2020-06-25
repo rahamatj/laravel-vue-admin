@@ -187,14 +187,24 @@ describe ('Login.vue', () => {
     expect(getClientInfo).toHaveBeenCalled()
   })
 
-  it ('sets client info', () => {
-    const wrapper = shallowMount(Login)
+  it.only ('sets client info', async () => {
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
 
-    wrapper.vm.getClientInfo()
+    const mutations = {
+      SET_FINGERPRINT: jest.fn()
+    }
+
+    const store = new Vuex.Store({ modules: { login: { namespaced: true, mutations } } })
+    const wrapper = shallowMount(Login, { store, localVue })
+
+    await flushPromises()
+    await flushPromises()
 
     expect(wrapper.vm.fingerprint).not.toBe('')
     expect(wrapper.vm.client).not.toBe('')
     expect(wrapper.vm.platform).not.toBe('')
+    expect(mutations.SET_FINGERPRINT).toHaveBeenCalled()
   })
 
   it ('shows spinner and disables the submit while form is loading', async () => {

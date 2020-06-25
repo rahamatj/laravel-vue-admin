@@ -1,5 +1,4 @@
 import store from '@/store'
-import axios from 'axios'
 
 store.subscribe(mutation => {
   switch (mutation.type) {
@@ -18,6 +17,16 @@ store.subscribe(mutation => {
         localStorage.setItem('user', JSON.stringify(mutation.payload))
       } else {
         localStorage.removeItem('user')
+      }
+      break
+
+    case 'login/SET_FINGERPRINT':
+      if (mutation.payload) {
+        localStorage.setItem('fingerprint', mutation.payload)
+        axios.defaults.headers.common['Fingerprint'] = mutation.payload
+      } else {
+        localStorage.removeItem('fingerprint')
+        axios.defaults.headers.common['Fingerprint'] = null
       }
       break
   }

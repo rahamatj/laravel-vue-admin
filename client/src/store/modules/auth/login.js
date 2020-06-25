@@ -1,3 +1,5 @@
+import Fingerprint2 from 'fingerprintjs2'
+
 export default {
   namespaced: true,
   state: {

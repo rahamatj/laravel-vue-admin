@@ -98,14 +98,11 @@
   export default {
     data() {
       return {
-        showDismissibleAlert: true,
+        fingerprint: '',
         year: '',
         form: new Form({
           email: '',
-          password: '',
-          fingerprint: '',
-          client: '',
-          platform: ''
+          password: ''
         })
       }
     },
@@ -113,6 +110,7 @@
       ...mapActions('login', ['authenticate']),
       ...mapMutations('login', ['SET_FINGERPRINT']),
       login() {
+        this.SET_FINGERPRINT(this.fingerprint)
         this.authenticate(this.form)
             .then(data => {
               this.$router.replace({ name: 'dashboard' })
@@ -121,7 +119,7 @@
               console.log(data)
             })
       },
-      getClientInfo() {
+      getFingerprint() {
         Fingerprint2.get({
           excludes: {
             hardwareConcurrency: true,
@@ -133,23 +131,15 @@
             enumerateDevices: true
           }
         }, components => {
-          for (let component of components) {
-            if (component.key === 'userAgent')
-              this.form.client = component.value;
-            if (component.key === 'platform')
-              this.form.platform = component.value;
-          }
-
           const values = components.map(function (component) { return component.value });
-          this.form.fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
 
-          this.SET_FINGERPRINT(this.form.fingerprint)
+          this.fingerprint = Fingerprint2.x64hash128(values.join(''), 31);
         })
       }
     },
     created() {
       this.year = (new Date()).getFullYear()
-      this.getClientInfo()
+      this.getFingerprint()
     }
   }
 </script>

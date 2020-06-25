@@ -106,10 +106,7 @@ describe('actions', () => {
 
     await actions.authenticate({ commit }, new Form({
       email: 'admin@email.com',
-      password: '12345678',
-      fingerprint: 'test',
-      client: 'test',
-      platform: 'test',
+      password: '12345678'
     }))
 
     expect(commit.args).toStrictEqual([

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\Auth;
 
+use Browser;
 use App\Client;
 use App\Http\Controllers\Controller;
 use App\Otp\Otp;
@@ -19,7 +20,7 @@ class LoginController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest')->except(['logout', 'isAuthenticated']);
+        $this->middleware('guest')->except(['logout']);
     }
 
     public function login(Request $request)
@@ -70,7 +71,7 @@ class LoginController extends Controller
         if ($user->is_client_lock_enabled) {
             $client = Client::where([
                 ['user_id', $user->id],
-                ['fingerprint', $request->fingerprint]
+                ['fingerprint', $request->header('Fingerprint')]
             ])->first();
 
             $userClientsCount = Client::where('user_id', $user->id)->count();
@@ -114,12 +115,15 @@ class LoginController extends Controller
 
     protected function authenticated(Request $request, $user)
     {
+        $client = Browser::browserName() ?: "Unknown";
+        $platform = Browser::platformName() ?: "Unknown";
+
         Client::updateOrcreate([
-            'fingerprint' => $request->fingerprint,
+            'fingerprint' => $request->header('Fingerprint'),
             'user_id' => $user->id
         ], [
-            'client' => $request->client,
-            'platform' => $request->platform,
+            'client' => $client,
+            'platform' => $platform,
             'ip' => $request->getClientIp(),
             'logged_in_at' => date("Y-m-d H:i:s")
         ]);
@@ -138,10 +142,7 @@ class LoginController extends Controller
     {
         $request->validate([
             $this->username() => 'required|string',
-            'password' => 'required|string',
-            'fingerprint' => 'required|string',
-            'client' => 'required|string',
-            'platform' => 'required|string',
+            'password' => 'required|string'
         ]);
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Otp\Exceptions;
+namespace App\Exceptions;
 
 use Exception;
 

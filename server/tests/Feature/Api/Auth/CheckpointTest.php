@@ -52,26 +52,6 @@ class CheckpointTest extends TestCase
     }
 
     /** @test */
-    public function shows_error_verifying_otp_if_no_fingerprint_header_was_attached()
-    {
-        $user = factory(User::class)->create([
-            'is_otp_verification_enabled_at_login' => true,
-            'pin' => Hash::make('1234')
-        ]);
-
-        Passport::actingAs($user);
-
-        $response = $this->json('post', '/api/checkpoint', [
-            'otp' => '1234'
-        ]);
-
-        $response->assertStatus(422);
-        $response->assertJson([
-            'message' => 'Fingerprint header is required.',
-        ]);
-    }
-
-    /** @test */
     public function shows_error_verifying_otp_if_fingerprint_does_not_match()
     {
         $user = factory(User::class)->create([

@@ -6,6 +6,31 @@ import Errors from "../../../src/utils/Errors"
 import flushPromises from 'flush-promises'
 
 describe ('Login.vue', () => {
+  it ('gets fingerprint when created', async () => {
+    const getFingerprint = jest.fn()
+    const wrapper = shallowMount(Login, { methods: { getFingerprint } })
+
+    expect(getFingerprint).toHaveBeenCalled()
+  })
+
+  it ('sets fingerprint', async () => {
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
+
+    const mutations = {
+      SET_FINGERPRINT: jest.fn()
+    }
+
+    const store = new Vuex.Store({ modules: { login: { namespaced: true, mutations } } })
+    const wrapper = shallowMount(Login, { store, localVue })
+
+    const testUtils = new TestUtils(wrapper)
+
+    await testUtils.submit('#login-form')
+
+    expect(mutations.SET_FINGERPRINT).toHaveBeenCalled()
+  })
+  
   it ('authenticates and redirects to dashboard', async () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
@@ -178,33 +203,6 @@ describe ('Login.vue', () => {
     })
 
     expect(wrapper.vm.form.errors.hasMessage()).toBe(false)
-  })
-
-  it ('gets client info when created', () => {
-    const getClientInfo = jest.fn()
-    const wrapper = shallowMount(Login, { methods: { getClientInfo } })
-
-    expect(getClientInfo).toHaveBeenCalled()
-  })
-
-  it.only ('sets client info', async () => {
-    const localVue = createLocalVue()
-    localVue.use(Vuex)
-
-    const mutations = {
-      SET_FINGERPRINT: jest.fn()
-    }
-
-    const store = new Vuex.Store({ modules: { login: { namespaced: true, mutations } } })
-    const wrapper = shallowMount(Login, { store, localVue })
-
-    await flushPromises()
-    await flushPromises()
-
-    expect(wrapper.vm.fingerprint).not.toBe('')
-    expect(wrapper.vm.client).not.toBe('')
-    expect(wrapper.vm.platform).not.toBe('')
-    expect(mutations.SET_FINGERPRINT).toHaveBeenCalled()
   })
 
   it ('shows spinner and disables the submit while form is loading', async () => {

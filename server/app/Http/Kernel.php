@@ -69,6 +69,7 @@ class Kernel extends HttpKernel
         'verify-otp-at-login' => \App\Otp\Middleware\VerifyOtpAtLogin::class,
         'activate-google2fa' => \App\Otp\Middleware\ActivateGoogle2fa::class,
         'google2fa-is-not-activated' => \App\Otp\Middleware\Google2faIsNotActivated::class,
-        'access-app' => \App\Otp\Middleware\AccessApp::class
+        'access-app' => \App\Otp\Middleware\AccessApp::class,
+        'fingerprint-header-required' => \App\Http\Middleware\FingerprintHeaderRequired::class
     ];
 }

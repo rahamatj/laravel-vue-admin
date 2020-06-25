@@ -3,6 +3,7 @@
 namespace Tests\Feature\Api\Auth;
 
 use App\Client;
+use App\Exceptions\FingerprintHeaderRequiredException;
 use App\Otp\Mail\Otp;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -19,10 +20,7 @@ class LoginTest extends TestCase
 
     protected $requestData = [
         'email' => 'admin@email.com',
-        'password' => '12345678',
-        'fingerprint' => 'test',
-        'client' => 'test',
-        'platform' => 'test',
+        'password' => '12345678'
     ];
 
     public function setUp(): void
@@ -32,13 +30,30 @@ class LoginTest extends TestCase
     }
 
     /** @test */
-    public function user_gets_an_access_token_and_client_gets_added_to_database()
+    public function throws_exception_if_no_fingerprint_header_is_attached()
     {
+        $this->withoutExceptionHandling();
+        $this->expectException(FingerprintHeaderRequiredException::class);
+
         $user = factory(User::class)->create();
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
         ]));
+    }
+
+    /** @test */
+    public function user_gets_an_access_token_and_client_gets_added_to_database()
+    {
+        $user = factory(User::class)->create();
+
+        $client = factory(Client::class)->make();
+
+        $response = $this->json('post', '/api/login', $this->requestData([
+            'email' => $user->email
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -57,9 +72,15 @@ class LoginTest extends TestCase
             'otp_type' => 'mail'
         ]);
 
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         Mail::assertQueued(
@@ -81,7 +102,9 @@ class LoginTest extends TestCase
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $token = $response->getOriginalContent()['token'];
 
@@ -106,7 +129,9 @@ class LoginTest extends TestCase
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $token = $response->getOriginalContent()['token'];
 
@@ -121,24 +146,25 @@ class LoginTest extends TestCase
     /** @test */
     public function fields_are_required_to_get_access_token()
     {
+        $user = factory(User::class)->create();
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => '',
-            'password' => '',
-            'fingerprint' => '',
-            'client' => '',
-            'platform' => '',
-
-        ]));
+            'password' => ''
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertStatus(422);
         $response->assertJson([
             'message' => 'The given data was invalid.',
             'errors' =>  [
                 'email' => ['The email field is required.'],
-                'password' => ['The password field is required.'],
-                'fingerprint' => ['The fingerprint field is required.'],
-                'client' => ['The client field is required.'],
-                'platform' => ['The platform field is required.']
+                'password' => ['The password field is required.']
             ]
         ]);
     }
@@ -146,9 +172,15 @@ class LoginTest extends TestCase
     /** @test */
     public function user_does_not_get_access_token_without_correct_email()
     {
-        factory(User::class)->create();
+        $user = factory(User::class)->create();
 
-        $response = $this->json('post', '/api/login', $this->requestData());
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->json('post', '/api/login', $this->requestData(), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertStatus(422);
         $response->assertJson([
@@ -164,10 +196,16 @@ class LoginTest extends TestCase
     {
         $user = factory(User::class)->create();
 
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email,
             'password' => '123456789'
-        ]));
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertStatus(422);
         $response->assertJson([
@@ -194,7 +232,9 @@ class LoginTest extends TestCase
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => 'test'
+        ]);
 
         $response->assertUnauthorized();
         $response->assertJson([
@@ -222,9 +262,10 @@ class LoginTest extends TestCase
         ]);
 
         $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email,
-            'fingerprint' => $client->fingerprint
-        ]));
+            'email' => $user->email
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -249,9 +290,10 @@ class LoginTest extends TestCase
         ]);
 
         $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email,
-            'fingerprint' => $client->fingerprint
-        ]));
+            'email' => $user->email
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertUnauthorized();
         $response->assertJson([
@@ -275,9 +317,10 @@ class LoginTest extends TestCase
         ]);
 
         $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email,
-            'fingerprint' => $client->fingerprint
-        ]));
+            'email' => $user->email
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -302,7 +345,9 @@ class LoginTest extends TestCase
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => 'test'
+        ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -320,13 +365,15 @@ class LoginTest extends TestCase
             'is_ip_lock_enabled' => 1
         ]);
 
-        factory(Client::class)->create([
+        $client = factory(Client::class)->create([
             'user_id' => $user->id
         ]);
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertUnauthorized();
         $response->assertJson([
@@ -343,9 +390,13 @@ class LoginTest extends TestCase
             'is_ip_lock_enabled' => 1
         ]);
 
+        $client = factory(Client::class)->make();
+
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -369,9 +420,10 @@ class LoginTest extends TestCase
         ]);
 
         $response = $this->json('post', '/api/login', $this->requestData([
-            'email' => $user->email,
-            'fingerprint' => $client->fingerprint
-        ]));
+            'email' => $user->email
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
@@ -391,7 +443,9 @@ class LoginTest extends TestCase
 
         $response = $this->json('post', '/api/login', $this->requestData([
             'email' => $user->email
-        ]));
+        ]), [
+            'Fingerprint' => $client->fingerprint
+        ]);
 
         $token = $response->getOriginalContent()['token'];
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api\Auth;
 
+use App\Client;
 use App\Notifications\ResetPassword;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,8 +25,14 @@ class ForgotPasswordTest extends TestCase
 
         $user = factory(User::class)->create();
 
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
         $response = $this->json('post', '/api/password/email', [
             'email' => $user->email
+        ], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertOk();
@@ -47,8 +54,16 @@ class ForgotPasswordTest extends TestCase
      */
     public function user_can_not_submit_password_reset_form_without_email()
     {
+        $user = factory(User::class)->create();
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
+
         $response = $this->json('post', '/api/password/email', [
             'email' => ''
+        ], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);
@@ -65,10 +80,16 @@ class ForgotPasswordTest extends TestCase
      */
     public function user_can_not_submit_password_reset_form_without_valid_email()
     {
-        factory(User::class)->create();
+        $user = factory(User::class)->create();
+
+        $client = factory(Client::class)->create([
+            'user_id' => $user->id
+        ]);
 
         $response = $this->json('post', '/api/password/email', [
             'email' => 'admin@email.com'
+        ], [
+            'Fingerprint' => $client->fingerprint
         ]);
 
         $response->assertStatus(422);

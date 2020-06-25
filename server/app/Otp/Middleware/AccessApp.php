@@ -2,7 +2,6 @@
 
 namespace App\Otp\Middleware;
 
-use App\Otp\Exceptions\FingerprintHeaderRequiredException;
 use Illuminate\Support\Facades\Auth;
 use App\Otp\Otp;
 use Closure;
@@ -18,11 +17,8 @@ class AccessApp
      */
     public function handle($request, Closure $next)
     {
-        if (! $fingerprint = $request->header('fingerprint'))
-            throw new FingerprintHeaderRequiredException('Fingerprint header is required.');
-
         if (Auth::user()->is_otp_verification_enabled_at_login
-            && ! Otp::isVerifiedAtLogin($fingerprint))
+            && ! Otp::isVerifiedAtLogin($request->header('Fingerprint')))
             return response()->json([
                 'message' => 'Forbidden.'
             ], 403);

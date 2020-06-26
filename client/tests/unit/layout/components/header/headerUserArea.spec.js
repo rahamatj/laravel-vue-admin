@@ -6,12 +6,25 @@ import TestUtils from '../../../../TestUtils'
 describe ('HeaderUSerArea.vue', () => {
   let wrapper
   let testUtils
+
+  const state = {
+    user: {
+      name: 'Test User'
+    }
+  }
+
+  const mutations = {
+    SET_IS_LOGGING_OUT: jest.fn()
+  }
+
   const actions = {
     unauthenticate: jest.fn(() => Promise.resolve())
   }
+
   const $router = {
     replace: jest.fn()
   }
+
   beforeEach(() => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
@@ -20,16 +33,13 @@ describe ('HeaderUSerArea.vue', () => {
       modules: {
         login: {
           namespaced: true,
-          state: {
-            user: {
-              name: 'Test User'
-            }
-          },
+          state,
           getters: {
             user (state) {
               return state.user
             }
           },
+          mutations,
           actions
         }
       }
@@ -43,12 +53,15 @@ describe ('HeaderUSerArea.vue', () => {
     testUtils.see('Test User')
   })
 
-  it.only ('logs out the user', async () => {
+  it ('logs out the user', async () => {
     testUtils.click('#logout')
+
+    expect(mutations.SET_IS_LOGGING_OUT).toHaveBeenCalledWith(state, true)
     expect(actions.unauthenticate).toHaveBeenCalled()
 
     await wrapper.vm.$nextTick()
 
+    expect(mutations.SET_IS_LOGGING_OUT).toHaveBeenCalledWith(state, false)
     expect($router.replace).toHaveBeenCalledWith({ name: 'login' })
   })
 })

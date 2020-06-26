@@ -45,13 +45,27 @@ describe('getters', () => {
 
     expect(result).toBe(true)
   })
+
+  it ('gets if logging out', () => {
+    const state = { isLoggingOut: true }
+
+    const result = getters.isLoggingOut(state)
+
+    expect(result).toBe(true)
+  })
 })
 
 describe ('mutations', () => {
   let state;
 
   beforeEach(() => {
-    state = { token: null, user: null, fingerprint: null, isOtpVerifiedAtLogin: false }
+    state = {
+      token: null,
+      user: null,
+      fingerprint: null,
+      isOtpVerifiedAtLogin: false,
+      isLoggingOut: false
+    }
   })
 
   it ('sets token', () => {
@@ -76,6 +90,12 @@ describe ('mutations', () => {
     mutations.SET_IS_OTP_VERIFIED_AT_LOGIN(state, true)
 
     expect(state.isOtpVerifiedAtLogin).toBe(true)
+  })
+
+  it ('sets is logging out', () => {
+    mutations.SET_IS_LOGGING_OUT(state, true)
+
+    expect(state.isLoggingOut).toBe(true)
   })
 })
 

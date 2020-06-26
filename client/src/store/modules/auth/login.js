@@ -7,6 +7,7 @@ export default {
     user: null,
     fingerprint: null,
     isOtpVerifiedAtLogin: false,
+    isLoggingOut: false
   },
   getters: {
     authenticated (state) {
@@ -20,6 +21,9 @@ export default {
     },
     isOtpVerifiedAtLogin (state) {
       return state.isOtpVerifiedAtLogin
+    },
+    isLoggingOut (state) {
+      return state.isLoggingOut
     }
   },
   mutations: {
@@ -34,6 +38,9 @@ export default {
     },
     SET_IS_OTP_VERIFIED_AT_LOGIN (state, isOtpVerifiedAtLogin) {
       state.isOtpVerifiedAtLogin = isOtpVerifiedAtLogin
+    },
+    SET_IS_LOGGING_OUT (state, isLoggingOut) {
+      state.isLoggingOut = isLoggingOut
     }
   },
   actions: {

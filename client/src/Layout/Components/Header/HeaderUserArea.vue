@@ -31,7 +31,7 @@
 
 <script>
     import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-    import { mapGetters, mapActions } from 'vuex'
+    import { mapGetters, mapActions, mapMutations } from 'vuex'
 
     import {library} from '@fortawesome/fontawesome-svg-core'
     import {
@@ -74,9 +74,12 @@
         },
         methods: {
           ...mapActions('login', ['unauthenticate']),
+          ...mapMutations('login', ['SET_IS_LOGGING_OUT']),
           logout() {
+            this.SET_IS_LOGGING_OUT(true)
             this.unauthenticate()
                 .then(() => {
+                  this.SET_IS_LOGGING_OUT(false)
                   this.$router.replace({ name: 'login' })
                 })
           }

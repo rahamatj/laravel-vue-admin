@@ -56,7 +56,7 @@ export default {
               commit('SET_TOKEN', null)
               commit('SET_FINGERPRINT', null)
               commit('SET_USER', null)
-              commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false)
+              commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false, { root: true })
 
               resolve()
             })

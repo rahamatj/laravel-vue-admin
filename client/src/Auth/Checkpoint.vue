@@ -117,7 +117,7 @@
       ...mapGetters('login', ['user'])
     },
     methods: {
-      ...mapActions('login', ['unathenticate']),
+      ...mapActions('login', ['unauthenticate']),
       ...mapActions('checkpoint', ['verify']),
       ...mapMutations('login', ['SET_IS_LOGGING_OUT']),
       check() {

@@ -134,7 +134,7 @@ describe('actions', () => {
       ['SET_TOKEN', null],
       ['SET_FINGERPRINT', null],
       ['SET_USER', null],
-      ['checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false]
+      ['checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false, { root: true }]
     ])
   })
 })

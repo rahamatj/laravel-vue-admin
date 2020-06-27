@@ -31,8 +31,9 @@ Route::group(['middleware' => 'fingerprint-header-required'], function () {
                 ->middleware('activate-google2fa');
         });
 
+        Route::post('/logout', 'Auth\LoginController@logout');
+
         Route::group(['middleware' => 'access-app'], function () {
-            Route::post('/logout', 'Auth\LoginController@logout');
             Route::get('/dashboard', function (Request $request) {
                 return $request->user();
             });

@@ -2,29 +2,100 @@ import guards from '@/guards'
 import store from '@/store'
 
 describe('guards', () => {
+  let to, from, next
+
   beforeEach(() => {
     localStorage.clear()
+
+    to = {}
+    from = {}
+    next = jest.fn()
   })
 
   it ('redirects authenticated user to dashboard when accessing login page', () => {
     store.commit('login/SET_TOKEN', 'test')
 
-    const to = {}
-    const from = {}
-    const next = jest.fn()
-    guards.redirectToDashboard(to, from, next)
+    guards.authenticate(to, from, next)
 
     expect(next).toHaveBeenCalledWith({ name: 'dashboard' })
   })
 
   it ('redirects unauthenticated user to login page when accessing dashboard', () => {
-    store.commit('login/SET_TOKEN', null)
+    const user = {
+      is_otp_verification_enabled_at_login: false
+    }
 
-    const to = {}
-    const from = {}
-    const next = jest.fn()
-    guards.redirectToLogin(to, from, next)
+    store.commit('login/SET_TOKEN', null)
+    store.commit('login/SET_USER', user)
+    store.commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', true)
+
+    guards.accessApp(to, from, next)
 
     expect(next).toHaveBeenCalledWith({ name: 'login' })
+  })
+
+  it ('redirects user to checkpoint if otp verification at login is enabled and otp is not verified when accessing dashboard', () => {
+    const user = {
+      is_otp_verification_enabled_at_login: true
+    }
+
+    store.commit('login/SET_TOKEN', null)
+    store.commit('login/SET_USER', user)
+    store.commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false)
+
+    guards.accessApp(to, from, next)
+
+    expect(next).toHaveBeenCalledWith({ name: 'checkpoint' })
+  })
+
+  it ('redirects user to dashboard if otp verification at login is disabled when accessing checkpoint', () => {
+    const user = {
+      is_otp_verification_enabled_at_login: false
+    }
+
+    store.commit('login/SET_USER', user)
+
+    guards.verifyOtpAtLogin(to, from, next)
+
+    expect(next).toHaveBeenCalledWith({ name: 'dashboard' })
+  })
+
+  it ('redirects user to dashboard if otp is verified at login when accessing checkpoint', () => {
+    const user = {
+      is_otp_verification_enabled_at_login: true
+    }
+
+    store.commit('login/SET_USER', user)
+    store.commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', true)
+
+    guards.verifyOtpAtLogin(to, from, next)
+
+    expect(next).toHaveBeenCalledWith({ name: 'dashboard' })
+  })
+
+  it ('redirects user to checkpoint if google2fa is activated when accessing activate google2fa', () => {
+    const user = {
+      is_google2fa_activated: true,
+      otp_type: 'google2fa'
+    }
+
+    store.commit('login/SET_USER', user)
+
+    guards.activateGoogle2fa(to, from, next)
+
+    expect(next).toHaveBeenCalledWith({ name: 'checkpoint' })
+  })
+
+  it ('redirects user to checkpoint if otp type is not google2fa when accessing activate google2fa', () => {
+    const user = {
+      is_google2fa_activated: false,
+      otp_type: 'pin'
+    }
+
+    store.commit('login/SET_USER', user)
+
+    guards.activateGoogle2fa(to, from, next)
+
+    expect(next).toHaveBeenCalledWith({ name: 'checkpoint' })
   })
 })

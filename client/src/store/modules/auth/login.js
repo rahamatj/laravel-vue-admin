@@ -6,7 +6,6 @@ export default {
     token: null,
     user: null,
     fingerprint: null,
-    isOtpVerifiedAtLogin: false,
     isLoggingOut: false
   },
   getters: {
@@ -18,9 +17,6 @@ export default {
     },
     fingerprint (state) {
       return state.fingerprint
-    },
-    isOtpVerifiedAtLogin (state) {
-      return state.isOtpVerifiedAtLogin
     },
     isLoggingOut (state) {
       return state.isLoggingOut
@@ -36,9 +32,6 @@ export default {
     SET_FINGERPRINT (state, fingerprint) {
       state.fingerprint = fingerprint
     },
-    SET_IS_OTP_VERIFIED_AT_LOGIN (state, isOtpVerifiedAtLogin) {
-      state.isOtpVerifiedAtLogin = isOtpVerifiedAtLogin
-    },
     SET_IS_LOGGING_OUT (state, isLoggingOut) {
       state.isLoggingOut = isLoggingOut
     }
@@ -53,9 +46,7 @@ export default {
 
               resolve(data)
             })
-            .catch(data => {
-              reject(data)
-            })
+            .catch(data => reject(data))
       })
     },
     unauthenticate({ commit }) {
@@ -63,7 +54,9 @@ export default {
         axios.post('/api/logout')
             .then(response => {
               commit('SET_TOKEN', null)
+              commit('SET_FINGERPRINT', null)
               commit('SET_USER', null)
+              commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false)
 
               resolve()
             })

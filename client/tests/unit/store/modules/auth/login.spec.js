@@ -5,6 +5,43 @@ import Form from "../../../../../src/utils/Form";
 
 const { mutations, actions, getters } = login
 
+describe ('mutations', () => {
+  let state;
+
+  beforeEach(() => {
+    state = {
+      token: null,
+      user: null,
+      fingerprint: null,
+      isLoggingOut: false
+    }
+  })
+
+  it ('sets token', () => {
+    mutations.SET_TOKEN(state, 'test')
+
+    expect(state.token).toBe('test')
+  })
+
+  it ('sets user', () => {
+    mutations.SET_USER(state, { name: 'user', email: 'user@email.com' })
+
+    expect(state.user).toStrictEqual({ name: 'user', email: 'user@email.com' })
+  })
+
+  it ('sets fingerprint', () => {
+    mutations.SET_FINGERPRINT(state, 'test')
+
+    expect(state.fingerprint).toBe('test')
+  })
+
+  it ('sets is logging out', () => {
+    mutations.SET_IS_LOGGING_OUT(state, true)
+
+    expect(state.isLoggingOut).toBe(true)
+  })
+})
+
 describe('getters', () => {
   it ('gets authenticated true when token is set', () => {
     const state = { token: 'test' }
@@ -38,14 +75,6 @@ describe('getters', () => {
     expect(result).toBe('test')
   })
 
-  it ('gets if otp is verified at login', () => {
-    const state = { isOtpVerifiedAtLogin: true }
-
-    const result = getters.isOtpVerifiedAtLogin(state)
-
-    expect(result).toBe(true)
-  })
-
   it ('gets if logging out', () => {
     const state = { isLoggingOut: true }
 
@@ -55,54 +84,14 @@ describe('getters', () => {
   })
 })
 
-describe ('mutations', () => {
-  let state;
-
-  beforeEach(() => {
-    state = {
-      token: null,
-      user: null,
-      fingerprint: null,
-      isOtpVerifiedAtLogin: false,
-      isLoggingOut: false
-    }
-  })
-
-  it ('sets token', () => {
-    mutations.SET_TOKEN(state, 'test')
-
-    expect(state.token).toBe('test')
-  })
-
-  it ('sets user', () => {
-    mutations.SET_USER(state, { name: 'user', email: 'user@email.com' })
-
-    expect(state.user).toStrictEqual({ name: 'user', email: 'user@email.com' })
-  })
-
-  it ('sets fingerprint', () => {
-    mutations.SET_FINGERPRINT(state, 'test')
-
-    expect(state.fingerprint).toBe('test')
-  })
-
-  it ('sets is otp verified at login', () => {
-    mutations.SET_IS_OTP_VERIFIED_AT_LOGIN(state, true)
-
-    expect(state.isOtpVerifiedAtLogin).toBe(true)
-  })
-
-  it ('sets is logging out', () => {
-    mutations.SET_IS_LOGGING_OUT(state, true)
-
-    expect(state.isLoggingOut).toBe(true)
-  })
-})
-
 describe('actions', () => {
   window.axios = require('axios')
+
+  let commit
+
   beforeEach(() => {
     moxios.install()
+    commit = sinon.spy()
   })
 
   afterEach(() => {
@@ -110,8 +99,6 @@ describe('actions', () => {
   })
 
   it ('authenticates user', async () => {
-    const commit = sinon.spy()
-
     moxios.stubRequest('/api/login', {
       status: 200,
       response: {
@@ -139,15 +126,15 @@ describe('actions', () => {
   })
 
   it ('unauthenticates user', async () => {
-    const commit = sinon.spy()
-
     moxios.stubRequest('/api/logout', { status: 204 })
 
     await actions.unauthenticate({ commit })
 
     expect(commit.args).toStrictEqual([
       ['SET_TOKEN', null],
-      ['SET_USER', null]
+      ['SET_FINGERPRINT', null],
+      ['SET_USER', null],
+      ['checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false]
     ])
   })
 })

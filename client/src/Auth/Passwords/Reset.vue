@@ -24,7 +24,7 @@
                                 <div class="modal-body">
                                     <div class="h5 modal-title text-center">
                                         <h4 class="mt-2">
-                                            <div>Eload</div>
+                                            <div>{{ app.name }}</div>
                                             <span>Please update your password.</span>
                                         </h4>
                                     </div>
@@ -90,7 +90,7 @@
                         </b-form>
                     </div>
                     <div class="text-center text-white opacity-8 mt-3">
-                        Copyright &copy; Hosting4bd Ltd. {{ year }}
+                        Copyright &copy; {{ app.companyName }} {{ year }}
                     </div>
                 </b-col>
             </div>
@@ -105,7 +105,8 @@
     props: ['token'],
     data() {
       return {
-        year: '',
+        app: app,
+        year: (new Date()).getFullYear(),
         passwordReset: false,
         form: new Form({
           email: '',
@@ -121,9 +122,6 @@
             .then(data => this.passwordReset = true)
             .catch(data => console.log(data))
       }
-    },
-    created() {
-      this.year = (new Date()).getFullYear()
     }
   }
 </script>

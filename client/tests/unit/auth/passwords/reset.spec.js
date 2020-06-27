@@ -8,6 +8,7 @@ describe ('Reset.vue', () => {
   let wrapper
   let testUtils
   window.axios = require('axios')
+  window.app = require('@/utils/app')
 
   beforeEach(() => {
     moxios.install()

@@ -10,6 +10,8 @@ import Pages from './Layout/Wrappers/pagesLayout.vue';
 
 import store from './store'
 
+window.app = require('./utils/app')
+
 window.axios = require('axios');
 
 require('@/store/subscriber')
@@ -17,6 +19,10 @@ require('@/store/subscriber')
 store.commit('login/SET_TOKEN', localStorage.getItem('token'))
 store.commit('login/SET_FINGERPRINT', localStorage.getItem('fingerprint'))
 store.commit('login/SET_USER', JSON.parse(localStorage.getItem('user')))
+store.commit(
+    'checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN',
+    localStorage.getItem('isOtpVerifiedAtLogin') === 'true'
+)
 
 Vue.config.productionTip = false;
 
@@ -26,7 +32,7 @@ Vue.component('default-layout', Default);
 Vue.component('userpages-layout', Pages);
 
 router.beforeEach((to, from, next) => {
-  let title = 'Eload'
+  let title = app.name
 
   if (to.meta.title)
     title += ' - ' + to.meta.title

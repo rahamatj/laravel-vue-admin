@@ -29,5 +29,13 @@ store.subscribe(mutation => {
         axios.defaults.headers.common['Fingerprint'] = null
       }
       break
+
+    case 'checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN':
+      if (mutation.payload) {
+        localStorage.setItem('isOtpVerifiedAtLogin', mutation.payload)
+      } else {
+        localStorage.removeItem('isOtpVerifiedAtLogin')
+      }
+      break
   }
 })

@@ -21,8 +21,35 @@ export default new Router({
         layout: 'userpages'
       },
       component: () => import('../Auth/Login.vue'),
-      beforeEnter: guards.redirectToDashboard
+      beforeEnter: guards.authenticate
     },
+
+      // Checkpoint
+
+    {
+      path: '/checkpoint',
+      name: 'checkpoint',
+      meta: {
+        title: 'Checkpoint',
+        layout: 'userpages'
+      },
+      component: () => import('../Auth/Checkpoint.vue'),
+      beforeEnter: guards.verifyOtpAtLogin
+    },
+
+    {
+      path: '/checkpoint/google2fa/activate',
+      name: 'google2fa.activate',
+      meta: {
+        title: 'Activate Google Two Factor Authentication',
+        layout: 'userpages'
+      },
+      component: () => import('../Auth/Google2fa/Activate.vue'),
+      beforeEnter: guards.activateGoogle2fa
+    },
+
+
+      // Password Reset
 
     {
       path: '/password/reset',
@@ -32,7 +59,7 @@ export default new Router({
         layout: 'userpages'
       },
       component: () => import('../Auth/Passwords/Email.vue'),
-      beforeEnter: guards.redirectToDashboard
+      beforeEnter: guards.authenticate
     },
 
     {
@@ -44,7 +71,7 @@ export default new Router({
       },
       component: () => import('../Auth/Passwords/Reset.vue'),
       props: true,
-      beforeEnter: guards.redirectToDashboard
+      beforeEnter: guards.authenticate
     },
 
     // Dashboard
@@ -57,7 +84,7 @@ export default new Router({
         layout: 'default'
       },
       component: () => import('../Dashboard/Dashboard.vue'),
-      beforeEnter: guards.redirectToLogin
+      beforeEnter: guards.accessApp
     },
 
     // Pages

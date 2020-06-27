@@ -435,10 +435,15 @@ class LoginTest extends TestCase
     /** @test */
     public function authenticated_user_can_logout()
     {
-        $user = factory(User::class)->create();
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create([
+            'is_otp_verification_enabled_at_login' => true
+        ]);
 
         $client = factory(Client::class)->create([
-           'user_id' => $user->id
+           'user_id' => $user->id,
+            'is_otp_verified_at_login' => true
         ]);
 
         $response = $this->json('post', '/api/login', $this->requestData([
@@ -456,6 +461,13 @@ class LoginTest extends TestCase
 
         $response->assertNoContent();
         $this->assertCount(0, User::find($user->id)->tokens);
+
+        $updatedClient = Client::where([
+            ['user_id', $user->id],
+            ['fingerprint', $client->fingerprint]
+        ])->first();
+
+        $this->assertEquals(0, $updatedClient->is_otp_verified_at_login);
     }
 
     /** @test */

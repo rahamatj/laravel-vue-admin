@@ -6,6 +6,8 @@ import Errors from "../../../src/utils/Errors"
 import flushPromises from 'flush-promises'
 
 describe ('Login.vue', () => {
+  window.app = require('@/utils/app')
+
   it ('gets fingerprint when created', async () => {
     const getFingerprint = jest.fn()
     const wrapper = shallowMount(Login, { methods: { getFingerprint } })
@@ -31,7 +33,7 @@ describe ('Login.vue', () => {
     expect(mutations.SET_FINGERPRINT).toHaveBeenCalled()
   })
 
-  it ('authenticates and redirects to dashboard', async () => {
+  it ('authenticates and redirects to dashboard if otp verification at login is disabled', async () => {
     const localVue = createLocalVue()
     localVue.use(Vuex)
 
@@ -43,7 +45,24 @@ describe ('Login.vue', () => {
       replace: jest.fn()
     }
 
-    const store = new Vuex.Store({ modules: { login: { namespaced: true, actions } } })
+    const store = new Vuex.Store({
+      modules: {
+        login: {
+          namespaced: true,
+          state: {
+            user: {
+              is_otp_verification_enabled_at_login: false
+            }
+          },
+          getters: {
+            user (state) {
+              return state.user
+            }
+          },
+          actions
+        }
+      }
+    })
     const wrapper = shallowMount(Login, { store, localVue, mocks: { $router } })
     const testUtils = new TestUtils(wrapper)
 
@@ -53,6 +72,47 @@ describe ('Login.vue', () => {
 
     expect(actions.authenticate).toHaveBeenCalled()
     expect($router.replace).toHaveBeenCalledWith({ name: 'dashboard' })
+  })
+
+  it.only ('authenticates and redirects to checkpoint if otp verification at login is enabled', async () => {
+    const localVue = createLocalVue()
+    localVue.use(Vuex)
+
+    const actions = {
+      authenticate: jest.fn(() => Promise.resolve())
+    }
+
+    const $router = {
+      replace: jest.fn()
+    }
+
+    const store = new Vuex.Store({
+      modules: {
+        login: {
+          namespaced: true,
+          state: {
+            user: {
+              is_otp_verification_enabled_at_login: true
+            }
+          },
+          getters: {
+            user (state) {
+              return state.user
+            }
+          },
+          actions
+        }
+      }
+    })
+    const wrapper = shallowMount(Login, { store, localVue, mocks: { $router } })
+    const testUtils = new TestUtils(wrapper)
+
+    await testUtils.submit('#login-form')
+
+    await flushPromises()
+
+    expect(actions.authenticate).toHaveBeenCalled()
+    expect($router.replace).toHaveBeenCalledWith({ name: 'checkpoint' })
   })
 
   it ('shows the current year', () => {
@@ -205,7 +265,7 @@ describe ('Login.vue', () => {
     expect(wrapper.vm.form.errors.hasMessage()).toBe(false)
   })
 
-  it ('shows spinner and disables the submit while form is loading', async () => {
+  it ('shows spinner and disables the submit button while form is loading', async () => {
     const wrapper = shallowMount(Login)
 
     wrapper.vm.form.loading = true

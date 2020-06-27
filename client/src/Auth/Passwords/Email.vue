@@ -24,7 +24,7 @@
                                 <div class="modal-body">
                                     <div class="h5 modal-title text-center">
                                         <h4 class="mt-2">
-                                            <div>Eload</div>
+                                            <div>{{ app.name }}</div>
                                             <span>Please enter your email.</span>
                                         </h4>
                                     </div>
@@ -63,7 +63,7 @@
                         </b-form>
                     </div>
                     <div class="text-center text-white opacity-8 mt-3">
-                        Copyright &copy; Hosting4bd Ltd. {{ year }}
+                        Copyright &copy; {{ app.companyName }} {{ year }}
                     </div>
                 </b-col>
             </div>
@@ -77,7 +77,8 @@
   export default {
     data() {
       return {
-        year: '',
+        app: app,
+        year: (new Date()).getFullYear(),
         form: new Form({
           email: ''
         })
@@ -90,9 +91,6 @@
               console.log(data)
             })
       }
-    },
-    created() {
-      this.year = (new Date()).getFullYear()
     }
   }
 </script>

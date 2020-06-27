@@ -43,4 +43,16 @@ describe ('subscriber', () => {
 
     expect(localStorage.getItem('fingerprint')).toBe(null)
   })
+
+  it ('stores is otp verified at login to local storage', () => {
+    store.commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', true)
+
+    expect(localStorage.getItem('isOtpVerifiedAtLogin')).toBe("true")
+  })
+
+  it ('removes is otp verified at login from local storage if payload is null', () => {
+    store.commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false)
+
+    expect(localStorage.getItem('isOtpVerifiedAtLogin')).toBe(null)
+  })
 })

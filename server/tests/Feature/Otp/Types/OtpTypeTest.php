@@ -161,4 +161,22 @@ class OtpTypeTest extends TestCase
 
         $this->otpType->isVerifiedAtLogin('test');
     }
+
+    /** @test */
+    public function logs_out_otp()
+    {
+        $client = factory(Client::class)->create([
+           'user_id' => $this->user->id,
+           'is_otp_verified_at_login' => true
+        ]);
+
+        $this->otpType->logout($client->fingerprint);
+
+        $updatedClient = Client::where([
+            ['user_id', $this->user->id],
+            ['fingerprint', $client->fingerprint]
+        ])->first();
+
+        $this->assertEquals(0, $updatedClient->is_otp_verified_at_login);
+    }
 }

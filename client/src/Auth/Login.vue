@@ -24,7 +24,7 @@
                                 <div class="modal-body">
                                     <div class="h5 modal-title text-center">
                                         <h4 class="mt-2">
-                                            <div>Eload</div>
+                                            <div>{{ app.name }}</div>
                                             <span>Please sign in to your account below.</span>
                                         </h4>
                                     </div>
@@ -82,7 +82,7 @@
                         </b-form>
                     </div>
                     <div class="text-center text-white opacity-8 mt-3">
-                        Copyright &copy; Hosting4bd Ltd. {{ year }}
+                        Copyright &copy; {{ app.companyName }} {{ year }}
                     </div>
                 </b-col>
             </div>
@@ -92,19 +92,23 @@
 
 <script>
   import Form from '@/utils/Form'
-  import {mapActions, mapMutations} from 'vuex'
+  import {mapActions, mapMutations, mapGetters} from 'vuex'
   import Fingerprint2 from 'fingerprintjs2'
 
   export default {
     data() {
       return {
+        app: app,
         fingerprint: '',
-        year: '',
+        year: (new Date()).getFullYear(),
         form: new Form({
           email: '',
           password: ''
         })
       }
+    },
+    computed: {
+      ...mapGetters('login', ['user'])
     },
     methods: {
       ...mapActions('login', ['authenticate']),
@@ -113,7 +117,12 @@
         this.SET_FINGERPRINT(this.fingerprint)
         this.authenticate(this.form)
             .then(data => {
-              this.$router.replace({ name: 'dashboard' })
+              let routeName = 'dashboard'
+
+              if (this.user.is_otp_verification_enabled_at_login)
+                routeName = 'checkpoint'
+
+              this.$router.replace({ name: routeName })
             })
             .catch(data => {
               console.log(data)
@@ -138,7 +147,6 @@
       }
     },
     created() {
-      this.year = (new Date()).getFullYear()
       this.getFingerprint()
     }
   }

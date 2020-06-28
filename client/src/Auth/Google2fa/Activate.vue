@@ -74,6 +74,10 @@
               this.g2faUrl = response.data.g2faUrl
               this.isGettingG2faUrl = false
             })
+            .catch(error => {
+              console.error(error.response.data.message)
+              this.isGettingG2faUrl = false
+            })
       },
       redirectToCheckpoint() {
         this.user.is_google2fa_activated = true

@@ -87,9 +87,7 @@
     methods: {
       sendEmail() {
         this.form.post('/api/password/email')
-            .catch(data => {
-              console.log(data)
-            })
+            .catch(data => console.error(data.message))
       }
     }
   }

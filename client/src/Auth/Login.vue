@@ -124,9 +124,7 @@
 
               this.$router.replace({ name: routeName })
             })
-            .catch(data => {
-              console.log(data)
-            })
+            .catch(data => console.error(data.message))
       },
       getFingerprint() {
         Fingerprint2.get({

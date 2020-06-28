@@ -120,7 +120,7 @@
       reset() {
         this.form.post('/api/password/reset')
             .then(data => this.passwordReset = true)
-            .catch(data => console.log(data))
+            .catch(data => console.error(data.message))
       }
     }
   }

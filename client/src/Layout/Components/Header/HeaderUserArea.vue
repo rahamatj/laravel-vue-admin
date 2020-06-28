@@ -82,6 +82,10 @@
                   this.SET_IS_LOGGING_OUT(false)
                   this.$router.replace({ name: 'login' })
                 })
+                .catch(error => {
+                  console.error(error.response.data.message)
+                  this.SET_IS_LOGGING_OUT(false)
+                })
           }
         }
     }

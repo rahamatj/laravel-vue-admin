@@ -91,7 +91,7 @@
 </template>
 
 <script>
-  import Form from '@/utils/Form'
+  import Form from '@/utils/Form/Form'
   import {mapActions, mapMutations, mapGetters} from 'vuex'
   import Fingerprint2 from 'fingerprintjs2'
 

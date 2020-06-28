@@ -2,7 +2,7 @@ import {createLocalVue, shallowMount} from '@vue/test-utils'
 import Login from '@/Auth/Login.vue'
 import TestUtils from '../../TestUtils'
 import Vuex from 'vuex'
-import Errors from "../../../src/utils/Errors"
+import Errors from "@/utils/Form/Errors"
 import flushPromises from 'flush-promises'
 
 describe ('Login.vue', () => {

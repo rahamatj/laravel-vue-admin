@@ -99,7 +99,7 @@
 </template>
 
 <script>
-  import Form from '@/utils/Form'
+  import Form from '@/utils/Form/Form'
 
   export default {
     props: ['token'],

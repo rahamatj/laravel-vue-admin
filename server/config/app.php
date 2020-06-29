@@ -175,7 +175,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Sms\SmsServiceProvider::class,
-        App\Otp\OtpServiceProvider::class
+        App\Otp\OtpServiceProvider::class,
+        App\Providers\RepositoryServiceProvider::class,
     ],
 
     /*

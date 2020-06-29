@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Sms;
 
 use App\Sms\Exceptions\SmsApiNotSetException;
 use App\Sms\Exceptions\SmsMessageNotSetException;

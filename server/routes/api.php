@@ -37,6 +37,7 @@ Route::group(['middleware' => 'fingerprint-header-required'], function () {
             Route::get('/dashboard', function (Request $request) {
                 return $request->user();
             });
+
         });
     });
 });

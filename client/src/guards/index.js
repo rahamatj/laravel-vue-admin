@@ -18,6 +18,11 @@ export default {
     next()
   },
   verifyOtpAtLogin: (to, from, next) => {
+    const user = store.getters['login/user']
+
+    if (user.otp_type === 'google2fa' && ! user.is_google2fa_activated)
+      next({ name: 'google2fa.activate' })
+
     if (! store.getters['login/user'].is_otp_verification_enabled_at_login
       || store.getters['checkpoint/isOtpVerifiedAtLogin'])
       next({ name: 'dashboard' })

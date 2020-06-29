@@ -73,6 +73,20 @@ describe('guards', () => {
     expect(next).toHaveBeenCalledWith({ name: 'dashboard' })
   })
 
+  it ('redirects user to activate google2fa if otp type is google2fa and google2fa is not activated when accessing checkpoint', () => {
+    const user = {
+      is_otp_verification_enabled_at_login: true,
+      otp_type: 'google2fa',
+      is_google2fa_activated: false
+    }
+
+    store.commit('login/SET_USER', user)
+
+    guards.verifyOtpAtLogin(to, from, next)
+
+    expect(next).toHaveBeenCalledWith({ name: 'google2fa.activate' })
+  })
+
   it ('redirects user to checkpoint if google2fa is activated when accessing activate google2fa', () => {
     const user = {
       is_google2fa_activated: true,

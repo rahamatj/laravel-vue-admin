@@ -14,6 +14,11 @@ class Datatable
         $this->filterableColumns = $filterableColumns;
     }
 
+    public function filterColumns($filterableColumns)
+    {
+        $this->filterableColumns = $filterableColumns;
+    }
+
     public function query()
     {
         if (request()->has('sort_by') && request()->sort_by != null)

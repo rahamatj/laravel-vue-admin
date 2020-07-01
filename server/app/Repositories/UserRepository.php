@@ -10,7 +10,7 @@ class UserRepository implements UserRepositoryInterface
 {
     public function all()
     {
-        $query = User::select([
+        $query = User::latest()->select([
             'id',
             'name',
             'email',
@@ -19,7 +19,8 @@ class UserRepository implements UserRepositoryInterface
             'otp_type'
         ]);
 
-        $datatable = new Datatable($query, [
+        $datatable = new Datatable($query);
+        $datatable->filterColumns([
             'name',
             'email',
             'mobile_number',

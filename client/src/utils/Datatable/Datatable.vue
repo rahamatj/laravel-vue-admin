@@ -1,30 +1,27 @@
 <template>
     <div>
         <b-row>
-            <b-col sm="5" md="4" lg="4" class="my-1">
+            <b-col sm="3" md="2" lg="2" class="my-1">
                 <b-form-group
                         label="Per page"
                         label-cols-sm="6"
-                        label-cols-md="3"
-                        label-cols-lg="3"
+                        label-cols-md="6"
+                        label-cols-lg="6"
                         label-align-sm="left"
                         label-size="sm"
                         label-for="perPageSelect"
                         class="mb-0"
                 >
-                    <b-form-row>
-                        <b-col md="4" lg="4">
-                            <b-form-select
-                                    v-model="perPage"
-                                    id="perPageSelect"
-                                    size="sm"
-                                    :options="pageOptions"
-                            ></b-form-select>
-                        </b-col>
-                    </b-form-row>
+                    <b-form-select
+                            v-model="perPage"
+                            id="perPageSelect"
+                            size="sm"
+                            :options="pageOptions"
+                    ></b-form-select>
                 </b-form-group>
             </b-col>
-            <b-col sm="6" md="4" lg="4" offset-sm="0" offset-md="4" offset-lg="4" class="my-1">
+
+            <b-col sm="6" md="6" lg="4" offset-sm="3" offset-md="4" offset-lg="6" class="my-1">
                 <b-form-group
                         label="Filter"
                         label-cols-sm="3"
@@ -54,6 +51,7 @@
                  :filter="filter"
                  :per-page="perPage"
                  :current-page="currentPage"
+                 responsive="md"
                  stacked="sm"
                  :api-url="apiUrl"
                  show-empty
@@ -66,10 +64,10 @@
                 </div>
             </template>
 
-            <slot v-for="(_, name) in $slots" :name="name" :slot="name" />
+            <slot v-for="(_, name) in $slots" :name="name" :slot="name"/>
 
             <template v-for="(_, name) in $scopedSlots" :slot="name" slot-scope="slotData">
-                <slot :name="name" v-bind="slotData" />
+                <slot :name="name" v-bind="slotData"/>
             </template>
 
         </b-table>
@@ -86,55 +84,55 @@
 </template>
 
 <script>
-    export default {
-      props: {
-        apiUrl: {
-          type: String,
-          required: true
-        },
-        fields: {
-          type: Array,
-          required: true
-        }
+  export default {
+    props: {
+      apiUrl: {
+        type: String,
+        required: true
       },
-      data() {
-        return {
-          filter: null,
-          perPage: 25,
-          pageOptions: [25, 50, 100],
-          totalRows: 1,
-          currentPage: 1
+      fields: {
+        type: Array,
+        required: true
+      }
+    },
+    data() {
+      return {
+        filter: null,
+        perPage: 25,
+        pageOptions: [25, 50, 100],
+        totalRows: 1,
+        currentPage: 1
+      }
+    },
+    methods: {
+      items(ctx) {
+        let params = ''
+
+        params += '?per_page=' + ctx.perPage
+        params += '&page=' + ctx.currentPage
+
+        if (ctx.sortBy) {
+          params += '&sort_by=' + ctx.sortBy
+
+          if (ctx.sortDesc)
+            params += '&sort_desc=1'
         }
-      },
-      methods: {
-        items(ctx) {
-          let params = ''
 
-          params += '?per_page=' + ctx.perPage
-          params += '&page=' + ctx.currentPage
+        if (ctx.filter)
+          params += '&filter=' + ctx.filter
 
-          if (ctx.sortBy) {
-            params += '&sort_by=' + ctx.sortBy
+        return axios.get(ctx.apiUrl + params)
+            .then(response => {
+              this.totalRows = response.data.meta.total
 
-            if (ctx.sortDesc)
-              params += '&sort_desc=1'
-          }
+              return response.data.data
+            })
+            .catch(error => {
+              console.error(error.response.data.message)
 
-          if (ctx.filter)
-            params += '&filter=' + ctx.filter
-
-          return axios.get(ctx.apiUrl + params)
-              .then(response => {
-                this.totalRows = response.data.meta.total
-
-                return response.data.data
-              })
-              .catch(error => {
-                console.error(error.response.data.message)
-
-                return []
-              })
-        }
+              return []
+            })
       }
     }
+  }
 </script>

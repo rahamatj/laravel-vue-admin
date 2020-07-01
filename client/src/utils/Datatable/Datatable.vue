@@ -121,11 +121,20 @@
         if (ctx.filter)
           params += '&filter=' + ctx.filter
 
+        console.log(params)
+
         return axios.get(ctx.apiUrl + params)
             .then(response => {
-              this.totalRows = response.data.meta.total
+              let data = response.data
+              this.totalRows = data.meta.total
 
-              return response.data.data
+              let items = data.data.map((row, index) => {
+                row.row_no = index + (ctx.currentPage - 1) * ctx.perPage + 1
+
+                return row
+              })
+
+              return items
             })
             .catch(error => {
               console.error(error.response.data.message)

@@ -10,7 +10,7 @@ class UserRepository implements UserRepositoryInterface
 {
     public function all()
     {
-        $query = User::latest()->select([
+        $query = User::select([
             'id',
             'name',
             'email',
@@ -20,6 +20,8 @@ class UserRepository implements UserRepositoryInterface
         ]);
 
         $datatable = new Datatable($query);
+
+        $datatable->latest();
         $datatable->filterColumns([
             'name',
             'email',

@@ -61,4 +61,15 @@ class DatatableTest extends TestCase
 
         $this->assertEquals($data, $datatable->get());
     }
+
+    /** @test */
+    public function gets_latest_data()
+    {
+        $datatable = new Datatable(User::query(), [], true);
+
+        $data = User::latest()
+            ->paginate(25);
+
+        $this->assertEquals($data, $datatable->get());
+    }
 }

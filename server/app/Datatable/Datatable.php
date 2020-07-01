@@ -6,17 +6,24 @@ class Datatable
 {
     protected $query;
     protected $filterableColumns;
+    protected $getLatest;
     protected $perPage = 25;
 
-    public function __construct($query, $filterableColumns = [])
+    public function __construct($query, $filterableColumns = [], $getLatest = false)
     {
         $this->query = $query;
         $this->filterableColumns = $filterableColumns;
+        $this->getLatest = $getLatest;
     }
 
     public function filterColumns($filterableColumns)
     {
         $this->filterableColumns = $filterableColumns;
+    }
+
+    public function latest()
+    {
+        $this->getLatest = true;
     }
 
     public function query()
@@ -26,6 +33,8 @@ class Datatable
                 $this->query->orderByDesc(request()->sort_by);
             else
                 $this->query->orderBy(request()->sort_by);
+        else if ($this->getLatest)
+            $this->query->latest();
 
         if (request()->has('filter') && request()->filter != null && ! empty($this->filterableColumns))
             foreach ($this->filterableColumns as $filterableColumn)

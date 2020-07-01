@@ -87,6 +87,17 @@ export default new Router({
       beforeEnter: guards.accessApp
     },
 
+    {
+      path: '/users',
+      name: 'users',
+      meta: {
+        title: 'Users',
+        layout: 'default'
+      },
+      component: () => import('../Users/Users.vue'),
+      beforeEnter: guards.accessApp
+    },
+
     // Pages
 
     {

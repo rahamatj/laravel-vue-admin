@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import router from './router'
 
-import BootstrapVue from "bootstrap-vue"
+import BootstrapVue from 'bootstrap-vue'
 
 import App from './App'
 
-import Default from './Layout/Wrappers/baseLayout.vue';
-import Pages from './Layout/Wrappers/pagesLayout.vue';
+import Default from './Layout/Wrappers/baseLayout.vue'
+import Pages from './Layout/Wrappers/pagesLayout.vue'
+import Datatable from './utils/Datatable/Datatable.vue'
 
 import store from './store'
 
@@ -26,10 +27,11 @@ store.commit(
 
 Vue.config.productionTip = false;
 
-Vue.use(BootstrapVue);
+Vue.use(BootstrapVue)
 
-Vue.component('default-layout', Default);
-Vue.component('userpages-layout', Pages);
+Vue.component('default-layout', Default)
+Vue.component('userpages-layout', Pages)
+Vue.component('datatable', Datatable)
 
 router.beforeEach((to, from, next) => {
   let title = app.name
@@ -46,5 +48,5 @@ new Vue({
   router,
   store,
   template: '<App/>',
-  components: { App }
+  components: {App}
 });

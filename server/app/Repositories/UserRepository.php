@@ -10,7 +10,16 @@ class UserRepository implements UserRepositoryInterface
 {
     public function all()
     {
-        $datatable = new Datatable(User::query(), [
+        $query = User::select([
+            'id',
+            'name',
+            'email',
+            'mobile_number',
+            'is_otp_verification_enabled_at_login',
+            'otp_type'
+        ]);
+
+        $datatable = new Datatable($query, [
             'name',
             'email',
             'mobile_number',

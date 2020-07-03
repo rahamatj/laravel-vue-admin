@@ -14,7 +14,9 @@ class AddIpLockCloumnToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('is_ip_lock_enabled')->after('clients_allowed');
+            $table->boolean('is_ip_lock_enabled')
+                ->default(false)
+                ->after('clients_allowed');
         });
     }
 

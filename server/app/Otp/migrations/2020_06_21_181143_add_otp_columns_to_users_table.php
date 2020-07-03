@@ -32,6 +32,7 @@ class AddOtpColumnsToUsersTable extends Migration
                 ->default('pin')
                 ->after('password');
             $table->boolean('is_otp_verification_enabled_at_login')
+                ->default(false)
                 ->after('password');
         });
     }

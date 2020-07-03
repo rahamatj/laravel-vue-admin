@@ -23,21 +23,79 @@ class UsersControllerTest extends TestCase
     /** @test */
     public function returns_all_users_paginated()
     {
-        $this->withoutExceptionHandling();
-
         factory(User::class, 10)->create();
 
         $response = $this->json('get', '/api/users', [], [
-           'Fingerprint' => 'test'
+            'Fingerprint' => 'test'
         ]);
 
         $response->assertOk();
         $response->assertJsonStructure([
-           'data',
-           'meta',
-           'links'
+            'data',
+            'meta',
+            'links'
         ]);
 
         $this->assertCount(11, json_decode($response->getContent())->data);
+    }
+
+    /** @test */
+    public function stores_user()
+    {
+        $response = $this->json('post', '/api/users', [
+            'name' => 'test',
+            'email' => 'test@email.com',
+            'password' => '12345678',
+            'mobile_number' => '012345678',
+            'is_otp_verification_enabled_at_login' => false,
+            'is_client_lock_enabled' => false,
+            'is_ip_lock_enabled' => false
+        ], [
+            'Fingerprint' => 'test'
+        ]);
+
+        $response->assertOk();
+        $response->assertJsonStructure(['message', 'data']);
+        $response->assertJsonFragment([
+           'message' => 'User created successfully!'
+        ]);
+
+        $this->assertCount(2, User::all());
+    }
+
+    /** @test */
+    public function updates_user()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->json('patch', '/api/users/' . $user->id, [
+            'name' => 'test',
+            'email' => 'test@email.com',
+            'password' => '12345678',
+            'mobile_number' => '012345678'
+        ], [
+            'Fingerprint' => 'test'
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'message' => 'User updated successfully!'
+        ]);
+    }
+
+    /** @test */
+    public function destroys_user()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->json('delete', '/api/users/' . $user->id, [], [
+            'Fingerprint' => 'test'
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'message' => 'User deleted successfully!'
+        ]);
+        $this->assertCount(1, User::all());
     }
 }

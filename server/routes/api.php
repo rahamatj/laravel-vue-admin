@@ -37,9 +37,8 @@ Route::group(['middleware' => 'fingerprint-header-required'], function () {
             Route::get('/dashboard', function (Request $request) {
                 return $request->user();
             });
-            Route::resources([
-               'users' => 'UsersController'
-            ]);
+            Route::resource('users', 'UsersController')
+                ->except(['create', 'show', 'edit']);
         });
     });
 });

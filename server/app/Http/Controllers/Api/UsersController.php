@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreUser;
+use App\Http\Requests\UpdateUser;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\User;
 use App\Http\Resources\User as UserResource;
@@ -17,17 +19,7 @@ class UsersController extends Controller
      */
     public function index(UserRepositoryInterface $userRepository)
     {
-        return UserResource::collection($userRepository->all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return UserResource::collection($userRepository->datatable());
     }
 
     /**
@@ -36,31 +28,12 @@ class UsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUser $request, UserRepositoryInterface $userRepository)
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function show(User $user)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(User $user)
-    {
-        //
+        return response()->json([
+           'message' => 'User created successfully!',
+           'data' => new UserResource($userRepository->create($request->validated()))
+        ]);
     }
 
     /**
@@ -70,9 +43,13 @@ class UsersController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUser $request, User $user, UserRepositoryInterface $userRepository)
     {
-        //
+        $userRepository->update($user, $request->validated());
+
+        return response()->json([
+           'message' => 'User updated successfully!',
+        ]);
     }
 
     /**
@@ -81,8 +58,12 @@ class UsersController extends Controller
      * @param  \App\User  $user
      * @return \Illuminate\Http\Response
      */
-    public function destroy(User $user)
+    public function destroy(User $user, UserRepositoryInterface $userRepository)
     {
-        //
+        $userRepository->delete($user);
+
+        return response()->json([
+           'message' => 'User deleted successfully!'
+        ]);
     }
 }

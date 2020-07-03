@@ -8,7 +8,7 @@ use App\User;
 
 class UserRepository implements UserRepositoryInterface
 {
-    public function all()
+    public function datatable()
     {
         $query = User::select([
             'id',
@@ -30,5 +30,20 @@ class UserRepository implements UserRepositoryInterface
         ]);
 
         return $datatable->get();
+    }
+
+    public function create($data)
+    {
+        return User::create($data);
+    }
+
+    public function update(User $user, $data)
+    {
+        return $user->update($data);
+    }
+
+    public function delete(User $user)
+    {
+        return $user->delete();
     }
 }

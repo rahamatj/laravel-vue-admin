@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan;
 
 class UserSeeder extends Seeder
 {
@@ -14,5 +15,9 @@ class UserSeeder extends Seeder
         factory(\App\User::class)->create([
             'email' => 'admin@email.com'
         ]);
+
+        factory(\App\User::class, 100)->create();
+
+        Artisan::call('passport:install');
     }
 }

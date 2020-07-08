@@ -15,7 +15,7 @@ class AddClientLockColumnsToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->tinyInteger('clients_allowed')
-                ->nullable()
+                ->default(1)
                 ->after('password');
             $table->boolean('is_client_lock_enabled')
                 ->default(false)

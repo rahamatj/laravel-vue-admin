@@ -21,6 +21,10 @@ export default class TestUtils {
     return this.wrapper.find(selector).trigger('keydown')
   }
 
+  change (selector) {
+    return this.wrapper.find(selector).trigger('change')
+  }
+
   text (text) {
     expect(this.wrapper.text()).toContain(text)
   }

@@ -46,7 +46,8 @@
             </b-col>
         </b-row>
 
-        <b-table :items="items"
+        <b-table ref="datatable"
+                 :items="items"
                  :fields="fields"
                  :filter="filter"
                  :per-page="perPage"
@@ -121,8 +122,6 @@
         if (ctx.filter)
           params += '&filter=' + ctx.filter
 
-        console.log(params)
-
         return axios.get(ctx.apiUrl + params)
             .then(response => {
               let data = response.data
@@ -141,6 +140,9 @@
 
               return []
             })
+      },
+      refresh() {
+        this.$refs.datatable.refresh()
       }
     }
   }

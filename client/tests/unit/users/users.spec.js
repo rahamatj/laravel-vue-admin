@@ -1,20 +1,14 @@
 import moxios from "moxios"
 import flushPromises from "flush-promises"
 import Users from '@/Users/Users.vue'
-import { mount } from "@vue/test-utils"
+import {mount, shallowMount} from "@vue/test-utils"
 import TestUtils from "../../TestUtils";
 
 describe ('Users.vue', () => {
   window.axios = require('axios')
 
-  let wrapper;
-  let testUtils;
-
   beforeEach(() => {
     moxios.install()
-
-    wrapper = mount(Users)
-    testUtils = new TestUtils(wrapper)
   })
 
   afterEach(() => {
@@ -33,18 +27,17 @@ describe ('Users.vue', () => {
       }
     })
 
-    wrapper.vm.storeUser()
+    const wrapper = mount(Users)
+    const testUtils = new TestUtils(wrapper)
+
+    wrapper.vm.store()
 
     await flushPromises()
 
     testUtils.see('User created successfully!')
   })
 
-  it.only ('updates user', async () => {
-    await wrapper.setData({
-      editingUserId: 1
-    })
-
+  it ('updates user', async () => {
     moxios.stubRequest('/api/users/1', {
       status: 200,
       response: {
@@ -52,10 +45,39 @@ describe ('Users.vue', () => {
       }
     })
 
-    wrapper.vm.updateUser()
+    const wrapper = mount(Users)
+    const testUtils = new TestUtils(wrapper)
+
+    await wrapper.setData({
+      id: 1
+    })
+
+    wrapper.vm.update()
 
     await flushPromises()
 
     testUtils.see('User updated successfully!')
+  })
+
+  it ('destroys user', async () => {
+    moxios.stubRequest('/api/users/1', {
+      status: 200,
+      response: {
+        message: 'User deleted successfully!'
+      }
+    })
+
+    const $bvModal = {
+      msgBoxConfirm: () => Promise.resolve(true)
+    }
+
+    const wrapper = shallowMount(Users, { mocks: { $bvModal } })
+    const testUtils = new TestUtils(wrapper)
+
+    wrapper.vm.destroy(1)
+
+    await flushPromises()
+
+    testUtils.see('User deleted successfully!')
   })
 })

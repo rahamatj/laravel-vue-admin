@@ -17,21 +17,27 @@
                 <template v-slot:cell(actions)="row">
                     <b-button variant="info"
                               size="sm"
-                              class="mr-2"
-                              @click="showUser(row.item.id)">
+                              class="mr-2 mb-2"
+                              @click="show(row.item.id)">
                         Details
                     </b-button>
                     <b-button variant="primary"
                               size="sm"
-                              class="mr-2"
-                              @click="editUser(row.item.id)">
+                              class="mr-2 mb-2"
+                              @click="edit(row.item.id)">
                         Edit
+                    </b-button>
+                    <b-button variant="danger"
+                              size="sm"
+                              class="mr-2 mb-2"
+                              @click="destroy(row.item.id)">
+                        Delete
                     </b-button>
                 </template>
             </datatable>
         </b-card>
         <b-modal id="show-user-modal" title="User Details" size="lg">
-            <show-user ref="showUser" :id="userId"></show-user>
+            <show-user ref="showUser" :id="id"></show-user>
             <template v-slot:modal-footer>
                 <div class="w-100">
                     <div class="float-right">
@@ -67,7 +73,7 @@
                         </b-button>
                         <b-button
                                 variant="success"
-                                @click="storeUser"
+                                @click="store"
                                 :disabled="isStoring"
                         >
                             <b-spinner class="spinner"
@@ -81,7 +87,7 @@
             </template>
         </b-modal>
         <b-modal id="edit-user-modal" title="Edit User" size="lg">
-            <edit-user ref="editUser" :id="userId"></edit-user>
+            <edit-user ref="editUser" :id="id"></edit-user>
             <template v-slot:modal-footer>
                 <div class="w-100">
                     <div class="float-right">
@@ -95,7 +101,7 @@
                         </b-button>
                         <b-button
                                 variant="success"
-                                @click="updateUser"
+                                @click="update"
                                 :disabled="isUpdating"
                         >
                             <b-spinner class="spinner"
@@ -159,11 +165,11 @@
       ],
       successMessage: '',
       isStoring: false,
-      userId: 0,
+      id: 0,
       isUpdating: false
     }),
     methods: {
-      storeUser() {
+      store() {
         this.isCreating = true;
 
         this.$refs.createUser.submit()
@@ -178,15 +184,15 @@
               console.error(data.message)
             })
       },
-      showUser(id) {
-        this.userId = id
+      show(id) {
+        this.id = id
         this.$bvModal.show('show-user-modal')
       },
-      editUser(id) {
-        this.userId = id
+      edit(id) {
+        this.id = id
         this.$bvModal.show('edit-user-modal')
       },
-      updateUser() {
+      update() {
         this.isUpdating = true;
 
         this.$refs.editUser.submit()
@@ -200,6 +206,25 @@
               this.isUpdating = false
               console.error(data.message)
             })
+      },
+      destroy(id) {
+        this.$bvModal.msgBoxConfirm('Are you sure you want to delete this?', {
+          title: 'Please Confirm',
+          okVariant: 'danger',
+          okTitle: 'YES',
+          cancelTitle: 'NO',
+        })
+            .then(value => {
+              if (value) {
+                axios.delete('/api/users/' + id)
+                    .then(response => {
+                      this.successMessage = response.data.message
+                      this.$refs.usersTable.refresh()
+                    })
+                    .catch(error => console.error(error.response.data.message))
+              }
+            })
+            .catch(error => console.error(error.response.data.message))
       }
     }
   }

@@ -25,11 +25,6 @@ $factory->define(User::class, function (Faker $faker) {
         'mobile_number' => $faker->phoneNumber,
         'email_verified_at' => now(),
         'password' => '12345678',
-        'remember_token' => Str::random(10),
-        'is_client_lock_enabled' => 0,
-        'clients_allowed' => 0,
-        'is_ip_lock_enabled' => 0,
-        'is_otp_verification_enabled_at_login' => 0,
-        'otp_type' => 'pin'
+        'remember_token' => Str::random(10)
     ];
 });

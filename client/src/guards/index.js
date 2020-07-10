@@ -2,13 +2,13 @@ import store from '@/store'
 
 export default {
   authenticate: (to, from, next) => {
-    if (store.getters['login/authenticated'])
+    if (store.getters['login/isAuthenticated'])
       next({ name: 'dashboard' })
 
     next()
   },
   accessApp: (to, from, next) => {
-    if (! store.getters['login/authenticated'])
+    if (! store.getters['login/isAuthenticated'])
       next({ name: 'login' })
 
     if (store.getters['login/user'].is_otp_verification_enabled_at_login

@@ -1,6 +1,9 @@
 <template>
     <div>
-        <page-title :heading=heading :icon=icon @create-new="onCreateNew"></page-title>
+        <page-title :heading=heading
+                    :icon=icon
+                    @create-new="$bvModal.show('create-user-modal')">
+        </page-title>
         <b-alert :show="successMessage !== ''"
                  variant="success"
                  dismissible
@@ -12,20 +15,28 @@
                        apiUrl="/api/users"
                        :fields="fields">
                 <template v-slot:cell(actions)="row">
-                    <b-button size="sm" class="mr-2">
+                    <b-button variant="info"
+                              size="sm"
+                              class="mr-2">
                         Details
+                    </b-button>
+                    <b-button variant="primary"
+                              size="sm"
+                              class="mr-2"
+                              @click="editUser(row.item.id)">
+                        Edit
                     </b-button>
                 </template>
             </datatable>
         </b-card>
-        <b-modal id="create-user-modal" title="Create User" size="lg" @ok="createUser">
+        <b-modal id="create-user-modal" title="Create User" size="lg">
             <create-user ref="createUser"></create-user>
             <template v-slot:modal-footer>
                 <div class="w-100">
                     <div class="float-right">
                         <b-button
                                 variant="danger"
-                                class="mr-1"
+                                class="mr-2"
                                 @click="$bvModal.hide('create-user-modal')"
                                 :disabled="isCreating"
                         >
@@ -33,11 +44,38 @@
                         </b-button>
                         <b-button
                                 variant="success"
-                                @click="createUser"
-                                :disabled="isCreating"
+                                @click="storeUser"
+                                :disabled="isStoring"
                         ><b-spinner class="spinner"
                                     small
-                                    v-if="isCreating"
+                                    v-if="isStoring"
+                        ></b-spinner>
+                            Ok
+                        </b-button>
+                    </div>
+                </div>
+            </template>
+        </b-modal>
+        <b-modal id="edit-user-modal" title="Edit User" size="lg">
+            <edit-user ref="editUser" :id="editingUserId"></edit-user>
+            <template v-slot:modal-footer>
+                <div class="w-100">
+                    <div class="float-right">
+                        <b-button
+                                variant="danger"
+                                class="mr-2"
+                                @click="$bvModal.hide('edit-user-modal')"
+                                :disabled="isUpdating"
+                        >
+                            Cancel
+                        </b-button>
+                        <b-button
+                                variant="success"
+                                @click="updateUser"
+                                :disabled="isUpdating"
+                        ><b-spinner class="spinner"
+                                    small
+                                    v-if="isUpdating"
                         ></b-spinner>
                             Ok
                         </b-button>
@@ -51,11 +89,13 @@
 <script>
   import PageTitle from '@/Layout/Components/PageTitle.vue'
   import CreateUser from '@/Users/CreateUser'
+  import EditUser from '@/Users/EditUser'
 
   export default {
     components: {
       PageTitle,
-      CreateUser
+      CreateUser,
+      EditUser
     },
     data: () => ({
       heading: 'Users',
@@ -91,13 +131,12 @@
         'actions'
       ],
       successMessage: '',
-      isCreating: false
+      isStoring: false,
+      editingUserId: 0,
+      isUpdating: false
     }),
     methods: {
-      onCreateNew() {
-        this.$bvModal.show('create-user-modal')
-      },
-      createUser() {
+      storeUser() {
         this.isCreating = true;
 
         this.$refs.createUser.submit()
@@ -109,6 +148,25 @@
             })
             .catch(data => {
               this.isCreating = false
+              console.error(data.message)
+            })
+      },
+      editUser(id) {
+        this.editingUserId = id
+        this.$bvModal.show('edit-user-modal')
+      },
+      updateUser() {
+        this.isUpdating = true;
+
+        this.$refs.editUser.submit()
+            .then(data => {
+              this.successMessage = data.message
+              this.isUpdating = false
+              this.$bvModal.hide('edit-user-modal')
+              this.$refs.usersTable.refresh()
+            })
+            .catch(data => {
+              this.isUpdating = false
               console.error(data.message)
             })
       }

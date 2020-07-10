@@ -46,4 +46,18 @@ class UserRepository implements UserRepositoryInterface
     {
         return $user->delete();
     }
+
+    public function updatePassword(User $user, $data)
+    {
+        $user->password = $data['password'];
+
+        return $user->save();
+    }
+
+    public function updatePin(User $user, $data)
+    {
+        $user->password = $data['pin'];
+
+        return $user->save();
+    }
 }

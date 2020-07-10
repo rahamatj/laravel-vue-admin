@@ -9,7 +9,7 @@ export default {
     isLoggingOut: false
   },
   getters: {
-    authenticated (state) {
+    isAuthenticated (state) {
       return !!state.token
     },
     user (state) {

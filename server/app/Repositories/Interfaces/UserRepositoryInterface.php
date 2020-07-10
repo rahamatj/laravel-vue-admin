@@ -13,4 +13,8 @@ interface UserRepositoryInterface
     public function update(User $user, $data);
 
     public function delete(User $user);
+
+    public function updatePassword(User $user, $data);
+
+    public function updatePin(User $user, $data);
 }

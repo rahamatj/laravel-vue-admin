@@ -40,12 +40,28 @@ class UsersControllerTest extends TestCase
     }
 
     /** @test */
+    public function shows_user()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->json('get', '/api/users/' . $user->id, [], [
+           'Fingerprint' => 'test'
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'data' => $user->toArray()
+        ]);
+    }
+
+    /** @test */
     public function stores_user()
     {
         $response = $this->json('post', '/api/users', [
             'name' => 'test',
             'email' => 'test@email.com',
             'password' => '12345678',
+            'password_confirmation' => '12345678',
             'mobile_number' => '012345678',
             'is_otp_verification_enabled_at_login' => false,
             'is_client_lock_enabled' => false,
@@ -97,5 +113,40 @@ class UsersControllerTest extends TestCase
             'message' => 'User deleted successfully!'
         ]);
         $this->assertCount(1, User::all());
+    }
+
+    /** @test */
+    public function updates_password()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->json('patch', '/api/users/' . $user->id . '/password', [
+            'password' => '12345678',
+            'password_confirmation' => '12345678'
+        ], [
+            'Fingerprint' => 'test'
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'message' => 'Password updated successfully!'
+        ]);
+    }
+
+    /** @test */
+    public function updates_pin()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->json('patch', '/api/users/' . $user->id . '/pin', [
+            'pin' => '12345678',
+        ], [
+            'Fingerprint' => 'test'
+        ]);
+
+        $response->assertOk();
+        $response->assertJson([
+            'message' => 'PIN updated successfully!'
+        ]);
     }
 }

@@ -5,13 +5,23 @@ import { mount } from "@vue/test-utils"
 import TestUtils from "../../TestUtils";
 
 describe ('Users.vue', () => {
-  it.only ('creates user', async () => {
-    window.axios = require('axios')
+  window.axios = require('axios')
+
+  let wrapper;
+  let testUtils;
+
+  beforeEach(() => {
     moxios.install()
 
-    const wrapper = mount(Users)
-    const testUtils = new TestUtils(wrapper)
+    wrapper = mount(Users)
+    testUtils = new TestUtils(wrapper)
+  })
 
+  afterEach(() => {
+    moxios.uninstall()
+  })
+
+  it ('creates user', async () => {
     moxios.stubRequest('/api/users', {
       status: 200,
       response: {
@@ -23,16 +33,29 @@ describe ('Users.vue', () => {
       }
     })
 
-    const bvModalEvent = {
-      preventDefault: jest.fn()
-    }
-
-    await wrapper.vm.createUser(bvModalEvent)
+    wrapper.vm.storeUser()
 
     await flushPromises()
 
     testUtils.see('User created successfully!')
+  })
 
-    moxios.uninstall()
+  it.only ('updates user', async () => {
+    await wrapper.setData({
+      editingUserId: 1
+    })
+
+    moxios.stubRequest('/api/users/1', {
+      status: 200,
+      response: {
+        message: 'User updated successfully!'
+      }
+    })
+
+    wrapper.vm.updateUser()
+
+    await flushPromises()
+
+    testUtils.see('User updated successfully!')
   })
 })

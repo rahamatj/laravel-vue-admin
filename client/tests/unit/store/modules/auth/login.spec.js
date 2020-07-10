@@ -43,18 +43,18 @@ describe ('mutations', () => {
 })
 
 describe('getters', () => {
-  it ('gets authenticated true when token is set', () => {
+  it ('gets is authenticated true when token is set', () => {
     const state = { token: 'test' }
 
-    const result = getters.authenticated(state)
+    const result = getters.isAuthenticated(state)
 
     expect(result).toBe(true)
   })
 
-  it ('gets authenticated false when token is not set', () => {
+  it ('gets is authenticated false when token is not set', () => {
     const state = { token: null }
 
-    const result = getters.authenticated(state)
+    const result = getters.isAuthenticated(state)
 
     expect(result).toBe(false)
   })

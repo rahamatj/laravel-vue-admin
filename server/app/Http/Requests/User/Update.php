@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreUser extends FormRequest
+class Update extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,14 +25,12 @@ class StoreUser extends FormRequest
     {
         return [
             'name' => 'bail|required|string|max:255',
-            'email' => 'bail|required|email|unique:users',
+            'email' => 'bail|required|email|unique:users,email,' . $this->route('user')->id,
             'mobile_number' => 'bail|required|string|max:255',
-            'password' => 'bail|required|string|min:8|confirmed|max:255',
-            'pin' => 'bail|nullable|string|min:8|max:255',
             'is_otp_verification_enabled_at_login' => 'boolean',
             'otp_type' => 'string',
             'is_client_lock_enabled' => 'boolean',
-            'clients_allowed' => 'bail|numeric|gt:0',
+            'clients_allowed' => 'numeric',
             'is_ip_lock_enabled' => 'boolean'
         ];
     }

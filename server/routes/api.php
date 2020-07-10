@@ -38,7 +38,9 @@ Route::group(['middleware' => 'fingerprint-header-required'], function () {
                 return $request->user();
             });
             Route::resource('users', 'UsersController')
-                ->except(['create', 'show', 'edit']);
+                ->except(['create', 'edit']);
+            Route::patch('/users/{user}/password', 'UsersController@updatePassword');
+            Route::patch('/users/{user}/pin', 'UsersController@updatePin');
         });
     });
 });

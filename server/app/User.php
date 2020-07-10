@@ -41,10 +41,7 @@ class User extends Authenticatable
         'remember_token',
         'pin',
         'otp',
-        'google2fa_secret',
-        'is_client_lock_enabled',
-        'clients_allowed',
-        'is_ip_lock_enabled'
+        'google2fa_secret'
     ];
 
     /**

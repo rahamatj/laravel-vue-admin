@@ -17,7 +17,8 @@
                 <template v-slot:cell(actions)="row">
                     <b-button variant="info"
                               size="sm"
-                              class="mr-2">
+                              class="mr-2"
+                              @click="showUser(row.item.id)">
                         Details
                     </b-button>
                     <b-button variant="primary"
@@ -29,6 +30,28 @@
                 </template>
             </datatable>
         </b-card>
+        <b-modal id="show-user-modal" title="User Details" size="lg">
+            <show-user ref="showUser" :id="userId"></show-user>
+            <template v-slot:modal-footer>
+                <div class="w-100">
+                    <div class="float-right">
+                        <b-button
+                                variant="danger"
+                                class="mr-2"
+                                @click="$bvModal.hide('show-user-modal')"
+                        >
+                            Cancel
+                        </b-button>
+                        <b-button
+                                variant="success"
+                                @click="$bvModal.hide('show-user-modal')"
+                        >
+                            Ok
+                        </b-button>
+                    </div>
+                </div>
+            </template>
+        </b-modal>
         <b-modal id="create-user-modal" title="Create User" size="lg">
             <create-user ref="createUser"></create-user>
             <template v-slot:modal-footer>
@@ -46,10 +69,11 @@
                                 variant="success"
                                 @click="storeUser"
                                 :disabled="isStoring"
-                        ><b-spinner class="spinner"
-                                    small
-                                    v-if="isStoring"
-                        ></b-spinner>
+                        >
+                            <b-spinner class="spinner"
+                                       small
+                                       v-if="isStoring"
+                            ></b-spinner>
                             Ok
                         </b-button>
                     </div>
@@ -57,7 +81,7 @@
             </template>
         </b-modal>
         <b-modal id="edit-user-modal" title="Edit User" size="lg">
-            <edit-user ref="editUser" :id="editingUserId"></edit-user>
+            <edit-user ref="editUser" :id="userId"></edit-user>
             <template v-slot:modal-footer>
                 <div class="w-100">
                     <div class="float-right">
@@ -73,10 +97,11 @@
                                 variant="success"
                                 @click="updateUser"
                                 :disabled="isUpdating"
-                        ><b-spinner class="spinner"
-                                    small
-                                    v-if="isUpdating"
-                        ></b-spinner>
+                        >
+                            <b-spinner class="spinner"
+                                       small
+                                       v-if="isUpdating"
+                            ></b-spinner>
                             Ok
                         </b-button>
                     </div>
@@ -90,12 +115,14 @@
   import PageTitle from '@/Layout/Components/PageTitle.vue'
   import CreateUser from '@/Users/CreateUser'
   import EditUser from '@/Users/EditUser'
+  import ShowUser from '@/Users/ShowUser'
 
   export default {
     components: {
       PageTitle,
       CreateUser,
-      EditUser
+      EditUser,
+      ShowUser
     },
     data: () => ({
       heading: 'Users',
@@ -132,7 +159,7 @@
       ],
       successMessage: '',
       isStoring: false,
-      editingUserId: 0,
+      userId: 0,
       isUpdating: false
     }),
     methods: {
@@ -151,8 +178,12 @@
               console.error(data.message)
             })
       },
+      showUser(id) {
+        this.userId = id
+        this.$bvModal.show('show-user-modal')
+      },
       editUser(id) {
-        this.editingUserId = id
+        this.userId = id
         this.$bvModal.show('edit-user-modal')
       },
       updateUser() {

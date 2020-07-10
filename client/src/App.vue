@@ -1,9 +1,9 @@
 <template>
     <div id="app">
-        <div class="d-flex h-100 justify-content-center align-items-center" v-if="loading || isLoggingOut">
+        <div class="d-flex h-100 justify-content-center align-items-center" v-if="isLoading || isLoggingOut">
             <b-spinner class="spinner" variant="primary"></b-spinner>
         </div>
-        <component class="component" :is="layout" v-if="!loading && !isLoggingOut">
+        <component class="component" :is="layout" v-if="!isLoading && !isLoggingOut">
             <transition name="fade" mode="out-in">
                 <router-view></router-view>
             </transition>
@@ -21,7 +21,7 @@
       layout() {
         return (this.$route.meta.layout || default_layout) + '-layout';
       },
-      loading() {
+      isLoading() {
         return !this.$route.meta.layout
       }
     },

@@ -37,10 +37,15 @@ Route::group(['middleware' => 'fingerprint-header-required'], function () {
             Route::get('/dashboard', function (Request $request) {
                 return $request->user();
             });
+
             Route::resource('users', 'UsersController')
                 ->except(['create', 'edit']);
             Route::patch('/users/{user}/password', 'UsersController@updatePassword');
             Route::patch('/users/{user}/pin', 'UsersController@updatePin');
+
+            Route::get('/clients', 'ClientsController@index');
+            Route::patch('/clients/{client}/enabled', 'ClientsController@changeEnabledStatus');
+            Route::delete('/clients/{client}', 'ClientsController@destroy');
         });
     });
 });

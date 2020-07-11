@@ -24,7 +24,7 @@ export default new Router({
       beforeEnter: guards.authenticate
     },
 
-      // Checkpoint
+    // Checkpoint
 
     {
       path: '/checkpoint',
@@ -49,7 +49,7 @@ export default new Router({
     },
 
 
-      // Password Reset
+    // Password Reset
 
     {
       path: '/password/reset',
@@ -87,7 +87,7 @@ export default new Router({
       beforeEnter: guards.accessApp
     },
 
-      // Users
+    // Users
 
     {
       path: '/users',
@@ -100,7 +100,20 @@ export default new Router({
       beforeEnter: guards.accessApp
     },
 
-      // User Settings
+    // Clients
+
+    {
+      path: '/clients',
+      name: 'clients',
+      meta: {
+        title: 'Clients',
+        layout: 'default'
+      },
+      component: () => import('../Clients/Clients.vue'),
+      beforeEnter: guards.accessApp
+    },
+
+    // User Settings
 
     {
       path: '/settings/user',

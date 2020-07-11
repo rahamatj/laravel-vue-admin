@@ -40,12 +40,17 @@
           },
           {
             title: 'Users',
-            icon: 'pe-7s-add-user',
+            icon: 'pe-7s-users',
             href: '/users'
           },
           {
+            title: 'Clients',
+            icon: 'pe-7s-phone',
+            href: '/clients'
+          },
+          {
             title: 'User Settings',
-            icon: 'pe-7s-id',
+            icon: 'pe-7s-user',
             href: '/settings/user'
           },
           {

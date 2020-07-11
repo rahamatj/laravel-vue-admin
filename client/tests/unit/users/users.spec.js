@@ -67,11 +67,18 @@ describe ('Users.vue', () => {
       }
     })
 
+    const datatableStub = {
+      render: jest.fn(),
+      methods: {
+        refresh: jest.fn()
+      }
+    }
+
     const $bvModal = {
       msgBoxConfirm: () => Promise.resolve(true)
     }
 
-    const wrapper = shallowMount(Users, { mocks: { $bvModal } })
+    const wrapper = shallowMount(Users, { mocks: { $bvModal }, stubs: { 'datatable': datatableStub } })
     const testUtils = new TestUtils(wrapper)
 
     wrapper.vm.destroy(1)

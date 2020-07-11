@@ -1,5 +1,9 @@
 <template>
     <div>
+        <page-title :heading=heading
+                    :icon=icon
+                    no-create-new>
+        </page-title>
         <b-alert :show="successMessage !== ''"
                  variant="success"
                  dismissible
@@ -229,6 +233,7 @@
 </template>
 
 <script>
+  import PageTitle from '@/Layout/Components/PageTitle.vue'
   import Form from '@/utils/Form/Form'
   import ChangePassword from '@/Users/ChangePassword'
   import ChangePin from '@/Users/ChangePin'
@@ -236,11 +241,14 @@
 
   export default {
     components: {
+      PageTitle,
       ChangePassword,
       ChangePin
     },
     data() {
       return {
+        heading: 'User Settings',
+        icon: 'pe-7s-user icon-gradient bg-happy-itmeo',
         form: new Form({
           name: '',
           email: '',

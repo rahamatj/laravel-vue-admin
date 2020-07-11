@@ -132,7 +132,7 @@
     },
     data: () => ({
       heading: 'Users',
-      icon: 'pe-7s-add-user icon-gradient bg-happy-itmeo',
+      icon: 'pe-7s-users icon-gradient bg-happy-itmeo',
       fields: [
         {
           key: 'row_no',

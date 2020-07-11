@@ -37,7 +37,7 @@
 devServer: {
     proxy: {
       '/api/*': {
-        target: 'http://localhost/eload/server/public',
+        target: 'http://localhost/laravel-vue-admin/server/public',
         secure: false
       }
     }

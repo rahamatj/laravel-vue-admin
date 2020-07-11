@@ -62,6 +62,7 @@ class UsersController extends Controller
 
         return response()->json([
            'message' => 'User updated successfully!',
+           'data' => new UserResource($user)
         ]);
     }
 

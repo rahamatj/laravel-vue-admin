@@ -87,6 +87,8 @@ export default new Router({
       beforeEnter: guards.accessApp
     },
 
+      // Users
+
     {
       path: '/users',
       name: 'users',
@@ -95,6 +97,19 @@ export default new Router({
         layout: 'default'
       },
       component: () => import('../Users/Users.vue'),
+      beforeEnter: guards.accessApp
+    },
+
+      // User Settings
+
+    {
+      path: '/settings/user',
+      name: 'settings.user',
+      meta: {
+        title: 'User Settings',
+        layout: 'default'
+      },
+      component: () => import('../Settings/User.vue'),
       beforeEnter: guards.accessApp
     },
 

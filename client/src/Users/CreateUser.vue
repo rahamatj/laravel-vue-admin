@@ -6,7 +6,8 @@
         >
             {{ form.errors.getMessage() }}
         </b-alert>
-        <b-form @keydown="form.errors.clear($event.target.name)">
+        <b-form @keydown="form.errors.clear($event.target.name)"
+                @change="form.errors.clear($event.target.name)">
             <b-form-group id="name-input-group"
                           label="Name"
                           label-for="name">

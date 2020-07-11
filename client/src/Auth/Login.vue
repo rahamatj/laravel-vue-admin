@@ -64,7 +64,7 @@
                                         <router-link :to="{ name: 'password.request' }" class="btn-lg btn btn-link">Recover
                                             Password</router-link>
                                     </div>
-                                    <div class="float-right">
+                                    <div>
                                         <b-button id="login"
                                                   type="submit"
                                                   variant="primary"

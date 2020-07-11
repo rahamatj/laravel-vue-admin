@@ -94,7 +94,8 @@ class UsersControllerTest extends TestCase
         ]);
 
         $response->assertOk();
-        $response->assertJson([
+        $response->assertJsonStructure(['message', 'data']);
+        $response->assertJsonFragment([
             'message' => 'User updated successfully!'
         ]);
     }

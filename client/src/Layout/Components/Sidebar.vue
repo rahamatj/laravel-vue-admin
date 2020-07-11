@@ -44,6 +44,11 @@
             href: '/users'
           },
           {
+            title: 'User Settings',
+            icon: 'pe-7s-id',
+            href: '/settings/user'
+          },
+          {
             title: 'Pages',
             icon: 'pe-7s-browser',
             child: [

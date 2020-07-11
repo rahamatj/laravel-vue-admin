@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Datatable\Datatable;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\User;
+use Illuminate\Support\Facades\Auth;
 
 class UserRepository implements UserRepositoryInterface
 {
@@ -17,7 +18,7 @@ class UserRepository implements UserRepositoryInterface
             'mobile_number',
             'is_otp_verification_enabled_at_login',
             'otp_type'
-        ]);
+        ])->where('id', '!=', Auth::id());
 
         $datatable = new Datatable($query);
 

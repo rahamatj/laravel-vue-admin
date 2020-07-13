@@ -1,7 +1,7 @@
 import login from '@/store/modules/auth/login'
 import sinon from 'sinon'
 import moxios from 'moxios'
-import Form from "@/utils/Form/Form";
+import Form from "@/utils/Form";
 
 const { mutations, actions, getters } = login
 

@@ -213,7 +213,7 @@
 </template>
 
 <script>
-  import Form from '@/utils/Form/Form'
+  import Form from '@/utils/Form'
   import ChangePassword from '@/Users/ChangePassword'
   import ChangePin from '@/Users/ChangePin'
 

@@ -1,7 +1,7 @@
 import checkpoint from '@/store/modules/auth/checkpoint'
 import moxios from 'moxios'
 import sinon from 'sinon'
-import Form from "@/utils/Form/Form"
+import Form from "@/utils/Form"
 
 const { mutations, getters, actions } = checkpoint
 

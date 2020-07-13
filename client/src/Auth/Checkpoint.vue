@@ -96,7 +96,7 @@
 </template>
 
 <script>
-  import Form from '@/utils/Form/Form'
+  import Form from '@/utils/Form'
   import otp from '@/utils/otp'
   import { mapGetters, mapActions, mapMutations } from 'vuex'
 

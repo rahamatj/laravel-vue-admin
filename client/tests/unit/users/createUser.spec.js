@@ -1,8 +1,6 @@
 import CreateUser from '@/Users/CreateUser.vue'
 import { shallowMount } from "@vue/test-utils"
-import Form from '@/utils/Form/Form'
-import moxios from 'moxios'
-import flushPromises from 'flush-promises'
+import Form from '@/utils/Form'
 
 describe ('CreateUser.vue', () => {
   let wrapper;

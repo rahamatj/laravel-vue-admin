@@ -53,11 +53,12 @@ class DatatableTest extends TestCase
     {
         request()['filter'] = 'B';
 
-        $datatable = new Datatable(User::query(), ['name', 'email']);
+        $datatable = new Datatable(User::query());
+        $datatable->filterColumns(['name', 'email']);
 
         $data = User::where('name', 'like', '%B%')
-                    ->orWhere('email', 'like', '%B%')
-                    ->paginate(25);
+            ->orWhere('email', 'like', '%B%')
+            ->paginate(25);
 
         $this->assertEquals($data, $datatable->get());
     }
@@ -65,9 +66,22 @@ class DatatableTest extends TestCase
     /** @test */
     public function gets_latest_data()
     {
-        $datatable = new Datatable(User::query(), [], true);
+        $datatable = new Datatable(User::query());
+        $datatable->latest();
 
         $data = User::latest()
+            ->paginate(25);
+
+        $this->assertEquals($data, $datatable->get());
+    }
+
+    /** @test */
+    public function gets_ordered_data()
+    {
+        $datatable = new Datatable(User::query());
+        $datatable->orderBy('id', 'desc');
+
+        $data = User::orderBy('id', 'desc')
             ->paginate(25);
 
         $this->assertEquals($data, $datatable->get());

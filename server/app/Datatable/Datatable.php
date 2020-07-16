@@ -5,20 +5,26 @@ namespace App\Datatable;
 class Datatable
 {
     protected $query;
-    protected $filterableColumns;
-    protected $getLatest;
+    protected $filterableColumns = [];
+    protected $orderByColumn = '';
+    protected $order = 'asc';
+    protected $getLatest = false;
     protected $perPage = 25;
 
-    public function __construct($query, $filterableColumns = [], $getLatest = false)
+    public function __construct($query)
     {
         $this->query = $query;
-        $this->filterableColumns = $filterableColumns;
-        $this->getLatest = $getLatest;
     }
 
     public function filterColumns($filterableColumns)
     {
         $this->filterableColumns = $filterableColumns;
+    }
+
+    public function orderBy($column, $order = 'asc')
+    {
+        $this->orderByColumn = $column;
+        $this->order = $order;
     }
 
     public function latest()
@@ -41,6 +47,8 @@ class Datatable
                 $this->query->orderByDesc(request()->sort_by);
             else
                 $this->query->orderBy(request()->sort_by);
+        else if($this->orderByColumn)
+            $this->query->orderBy($this->orderByColumn, $this->order);
         else if ($this->getLatest)
             $this->query->latest();
     }

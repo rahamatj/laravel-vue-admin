@@ -58,7 +58,7 @@
       return {
         app: app,
         year: (new Date()).getFullYear(),
-        isGettingG2faUrl: true,
+        isGettingG2faUrl: false,
         g2faUrl: ''
       }
     },

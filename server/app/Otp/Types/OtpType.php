@@ -4,7 +4,7 @@ namespace App\Otp\Types;
 
 use App\Otp\Exceptions\EmptyGeneratedOtpException;
 use App\Otp\Exceptions\NullStoredOtpException;
-use App\Otp\traits\DatabaseVerification;
+use App\Otp\Traits\DatabaseVerification;
 use Illuminate\Support\Facades\Hash;
 
 abstract class OtpType

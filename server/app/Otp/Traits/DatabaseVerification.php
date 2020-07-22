@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Otp\traits;
+namespace App\Otp\Traits;
 
 use App\Client;
 use App\Otp\Exceptions\ClientNotFoundException;

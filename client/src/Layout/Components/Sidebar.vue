@@ -21,6 +21,9 @@
       SidebarMenu,
       VuePerfectScrollbar
     },
+    props: {
+      user: Object
+    },
     data() {
       return {
         menu: [

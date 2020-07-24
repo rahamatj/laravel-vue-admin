@@ -18,7 +18,7 @@ class CreateClientsTable extends Migration
             $table->foreignId('user_id')
                 ->constrained()
                 ->onDelete('cascade');
-            $table->string('fingerprint')->unique();
+            $table->string('fingerprint');
             $table->string('client');
             $table->string('platform');
             $table->string('ip');

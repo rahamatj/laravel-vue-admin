@@ -94,6 +94,10 @@
       fields: {
         type: Array,
         required: true
+      },
+      apiParams: {
+        type: String,
+        default: '?'
       }
     },
     data() {
@@ -107,9 +111,9 @@
     },
     methods: {
       items(ctx) {
-        let params = ''
+        let params = this.apiParams
 
-        params += '?per_page=' + ctx.perPage
+        params += 'per_page=' + ctx.perPage
         params += '&page=' + ctx.currentPage
 
         if (ctx.sortBy) {
@@ -124,16 +128,14 @@
 
         return axios.get(ctx.apiUrl + params)
             .then(response => {
-              let data = response.data
+              const data = response.data
               this.totalRows = data.meta.total
 
-              let items = data.data.map((row, index) => {
+              return data.data.map((row, index) => {
                 row.row_no = index + (ctx.currentPage - 1) * ctx.perPage + 1
 
                 return row
               })
-
-              return items
             })
             .catch(error => {
               console.error(error.response.data.message)

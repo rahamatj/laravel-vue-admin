@@ -12,7 +12,7 @@
         </b-alert>
         <b-card class="main-card mb-4">
             <datatable ref="usersTable"
-                       apiUrl="/api/users"
+                       api-url="/api/users"
                        :fields="fields">
                 <template v-slot:cell(actions)="row">
                     <b-button variant="info"
@@ -67,7 +67,7 @@
                                 variant="danger"
                                 class="mr-2"
                                 @click="$bvModal.hide('create-user-modal')"
-                                :disabled="isCreating"
+                                :disabled="isStoring"
                         >
                             Cancel
                         </b-button>

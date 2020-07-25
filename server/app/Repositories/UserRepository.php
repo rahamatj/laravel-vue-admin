@@ -57,7 +57,7 @@ class UserRepository implements UserRepositoryInterface
 
     public function updatePin(User $user, $data)
     {
-        $user->password = $data['pin'];
+        $user->pin = $data['pin'];
 
         return $user->save();
     }

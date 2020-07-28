@@ -13,6 +13,7 @@
 </template>
 
 <script>
+  import convertToLocaleDateTimeString from '@/utils/convertToLocaleDateTimeString'
 
   export default {
     props: {
@@ -63,6 +64,10 @@
           {
             key: 'is_ip_lock_enabled',
             formatter: value => value ? 'Yes' : 'No'
+          },
+          {
+            key: 'created_at',
+            formatter: value => convertToLocaleDateTimeString(value)
           }
         ],
         isLoading: false

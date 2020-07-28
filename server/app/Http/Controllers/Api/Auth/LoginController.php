@@ -125,7 +125,7 @@ class LoginController extends Controller
             'client' => $client,
             'platform' => $platform,
             'ip' => $request->getClientIp(),
-            'logged_in_at' => date("Y-m-d H:i:s")
+            'logged_in_at' => now()
         ]);
 
         if ($user->is_otp_verification_enabled_at_login)

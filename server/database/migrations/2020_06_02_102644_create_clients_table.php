@@ -23,7 +23,7 @@ class CreateClientsTable extends Migration
             $table->string('platform');
             $table->string('ip');
             $table->boolean('is_enabled')->default(1);
-            $table->dateTime('logged_in_at');
+            $table->timestamp('logged_in_at');
             $table->timestamps();
         });
     }

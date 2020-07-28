@@ -19,7 +19,7 @@
                               size="sm"
                               class="mr-2 mb-2"
                               @click="changeEnabledStatus(row.item.id)"
-                                v-if="row.item.is_enabled">
+                              v-if="row.item.is_enabled">
                         Disable
                     </b-button>
                     <b-button variant="primary"
@@ -43,6 +43,7 @@
 
 <script>
   import PageTitle from '@/Layout/Components/PageTitle.vue'
+  import convertToLocaleDateTimeString from '@/utils/convertToLocaleDateTimeString'
 
   export default {
     components: {
@@ -74,12 +75,16 @@
         },
         {
           key: 'is_enabled',
-          formatter: value => {
-            return value ? 'Yes' : 'No'
-          }
+          formatter: value => value ? 'Yes' : 'No'
         },
         {
           key: 'logged_in_at',
+          formatter: value => convertToLocaleDateTimeString(value),
+          sortable: true
+        },
+        {
+          key: 'created_at',
+          formatter: value => convertToLocaleDateTimeString(value),
           sortable: true
         },
         'actions'

@@ -122,6 +122,7 @@
   import CreateUser from '@/Users/CreateUser'
   import EditUser from '@/Users/EditUser'
   import ShowUser from '@/Users/ShowUser'
+  import convertToLocaleDateTimeString from '@/utils/convertToLocaleDateTimeString'
 
   export default {
     components: {
@@ -153,12 +154,15 @@
         {
           key: 'is_otp_verification_enabled_at_login',
           label: 'OTP at Login',
-          formatter: value => {
-            return value ? 'Yes' : 'No'
-          }
+          formatter: value => value ? 'Yes' : 'No'
         },
         {
           key: 'otp_type',
+          sortable: true
+        },
+        {
+          key: 'created_at',
+          formatter: value => convertToLocaleDateTimeString(value),
           sortable: true
         },
         'actions'

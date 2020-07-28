@@ -26,11 +26,12 @@ class ClientRepository implements ClientRepositoryInterface
 
         $datatable->latest();
         $datatable->filterColumns([
-            'user_name',
-            'client',
-            'platform',
-            'ip',
-            'logged_in_at'
+            'users.name',
+            'clients.client',
+            'clients.platform',
+            'clients.ip',
+            'clients.logged_in_at',
+            'clients.created_at'
         ]);
 
         return $datatable->get();

@@ -17,7 +17,8 @@ class UserRepository implements UserRepositoryInterface
             'email',
             'mobile_number',
             'is_otp_verification_enabled_at_login',
-            'otp_type'
+            'otp_type',
+            'created_at'
         ])->where('id', '!=', Auth::id());
 
         $datatable = new Datatable($query);
@@ -27,7 +28,8 @@ class UserRepository implements UserRepositoryInterface
             'name',
             'email',
             'mobile_number',
-            'otp_type'
+            'otp_type',
+            'created_at'
         ]);
 
         return $datatable->get();

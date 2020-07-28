@@ -13,6 +13,6 @@ $factory->define(Client::class, function (Faker $faker) {
         'client' => $faker->userAgent,
         'platform' => 'test',
         'ip' => $faker->ipv4,
-        'logged_in_at' => date("Y-m-d H:i:s")
+        'logged_in_at' => now()
     ];
 });

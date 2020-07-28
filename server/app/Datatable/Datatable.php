@@ -16,7 +16,7 @@ class Datatable
         $this->query = $query;
     }
 
-    public function filterColumns($filterableColumns)
+    public function filterBy(array $filterableColumns)
     {
         $this->filterableColumns = $filterableColumns;
     }

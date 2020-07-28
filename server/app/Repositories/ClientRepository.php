@@ -25,7 +25,7 @@ class ClientRepository implements ClientRepositoryInterface
         $datatable = new Datatable($query);
 
         $datatable->latest();
-        $datatable->filterColumns([
+        $datatable->filterBy([
             'users.name',
             'clients.client',
             'clients.platform',

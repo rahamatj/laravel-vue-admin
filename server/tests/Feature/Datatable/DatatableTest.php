@@ -54,7 +54,7 @@ class DatatableTest extends TestCase
         request()['filter'] = 'B';
 
         $datatable = new Datatable(User::query());
-        $datatable->filterColumns(['name', 'email']);
+        $datatable->filterBy(['name', 'email']);
 
         $data = User::where('name', 'like', '%B%')
             ->orWhere('email', 'like', '%B%')

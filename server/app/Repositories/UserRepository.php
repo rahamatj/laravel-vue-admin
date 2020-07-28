@@ -24,7 +24,7 @@ class UserRepository implements UserRepositoryInterface
         $datatable = new Datatable($query);
 
         $datatable->latest();
-        $datatable->filterColumns([
+        $datatable->filterBy([
             'name',
             'email',
             'mobile_number',

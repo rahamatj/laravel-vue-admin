@@ -174,17 +174,17 @@
     }),
     methods: {
       store() {
-        this.isCreating = true;
+        this.isStoring = true;
 
         this.$refs.createUser.submit()
             .then(data => {
               this.successMessage = data.message
-              this.isCreating = false
+              this.isStoring = false
               this.$bvModal.hide('create-user-modal')
               this.$refs.usersTable.refresh()
             })
             .catch(data => {
-              this.isCreating = false
+              this.isStoring = false
               console.error(data.message)
             })
       },

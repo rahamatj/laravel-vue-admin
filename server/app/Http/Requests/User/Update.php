@@ -30,7 +30,7 @@ class Update extends FormRequest
             'is_otp_verification_enabled_at_login' => 'boolean',
             'otp_type' => 'string',
             'is_client_lock_enabled' => 'boolean',
-            'clients_allowed' => 'numeric',
+            'clients_allowed' => 'integer|gt:0',
             'is_ip_lock_enabled' => 'boolean'
         ];
     }

@@ -8,7 +8,7 @@ use App\Repositories\Interfaces\ClientRepositoryInterface;
 use Illuminate\Http\Request;
 use App\Http\Resources\Client as ClientResource;
 
-class ClientsController extends Controller
+class ClientController extends Controller
 {
     public function index(ClientRepositoryInterface $clientRepository)
     {

@@ -12,7 +12,7 @@ use App\User;
 use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Request;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     /**
      * Display a listing of the resource.

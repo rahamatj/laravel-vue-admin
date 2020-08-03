@@ -8,7 +8,6 @@ export default new Router({
   scrollBehavior() {
     return window.scrollTo({top: 0, behavior: 'smooth'});
   },
-  mode: 'history',
   routes: [
 
     // Login

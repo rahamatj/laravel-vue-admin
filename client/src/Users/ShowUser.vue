@@ -57,10 +57,7 @@
             key: 'is_client_lock_enabled',
             formatter: value => value ? 'Yes' : 'No'
           },
-          {
-            key: 'clients_allowed',
-            formatter: (value, key, item) => item.is_client_lock_enabled ? value : 'N/A'
-          },
+          'clients_allowed',
           {
             key: 'is_ip_lock_enabled',
             formatter: value => value ? 'Yes' : 'No'

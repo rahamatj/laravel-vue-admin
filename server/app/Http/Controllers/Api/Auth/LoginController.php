@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Otp\Otp;
 use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -16,7 +15,7 @@ use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers, ThrottlesLogins;
+    use AuthenticatesUsers;
 
     public function __construct()
     {

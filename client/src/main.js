@@ -17,13 +17,13 @@ window.axios = require('axios');
 
 require('@/store/subscriber')
 
-store.commit('login/SET_TOKEN', localStorage.getItem('token'))
-store.commit('login/SET_FINGERPRINT', localStorage.getItem('fingerprint'))
-store.commit('login/SET_USER', JSON.parse(localStorage.getItem('user')))
-store.commit(
-    'checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN',
-    localStorage.getItem('isOtpVerifiedAtLogin') === 'true'
-)
+store.dispatch('login/check')
+    .then(data => console.log(data.message))
+    .catch(data => {
+      console.error(data.message)
+
+      router.push({ name: 'login' })
+    })
 
 Vue.config.productionTip = false;
 

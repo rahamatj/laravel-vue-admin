@@ -18,7 +18,7 @@ class LoginController extends Controller
 
     public function __construct()
     {
-        $this->middleware('guest')->except(['logout']);
+        $this->middleware('guest')->except(['logout', 'check']);
     }
 
     public function login(Request $request)
@@ -159,5 +159,12 @@ class LoginController extends Controller
         }
 
         return new Response('', 204);
+    }
+
+    public function check()
+    {
+        return response()->json([
+            'message' => 'Authenticated.'
+        ]);
     }
 }

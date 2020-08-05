@@ -21,6 +21,8 @@ Route::group(['middleware' => 'fingerprint-header-required'], function () {
     Route::post('/login', 'Auth\LoginController@login');
 
     Route::group(['middleware' => 'auth:api'], function() {
+        Route::get('/auth/check', 'Auth\LoginController@check');
+
         Route::group(['middleware' => 'verify-otp-at-login'], function () {
             Route::group(['middleware' => 'google2fa-is-not-activated'], function () {
                 Route::post('/checkpoint', 'Auth\CheckpointController@check');

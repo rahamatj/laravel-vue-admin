@@ -22,7 +22,8 @@ store.dispatch('login/check')
     .catch(data => {
       console.error(data.message)
 
-      router.push({ name: 'login' })
+      if (router.currentRoute.path !== '/')
+        router.push({ name: 'login' })
     })
 
 Vue.config.productionTip = false;

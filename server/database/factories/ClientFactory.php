@@ -11,7 +11,7 @@ $factory->define(Client::class, function (Faker $faker) {
         'user_id' => $faker->numberBetween(1, 100),
         'fingerprint' => Str::random(10),
         'client' => $faker->userAgent,
-        'platform' => 'test',
+        'platform' => 'Unknown',
         'ip' => $faker->ipv4,
         'logged_in_at' => now()
     ];

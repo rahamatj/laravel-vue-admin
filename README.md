@@ -22,8 +22,15 @@
 ### Server setup
 
 - `cd server && composer install`
+- `cp .env.example .env`
 - Create database and update `server/.env`
 - `cd server && php artisan migrate --seed`
+- Set server URL in `server/.env` (If not set properly APIs won't work in production)
+
+```
+APP_URL=http://localhost/laravel-vue-admin/server/public
+```
+
 - (Optional) Set SMS API in `server/.env`
     - e.g: `SMS_API=https://sms-api.com?to={to}&message={message}`
     - SMS API must have `{to}` and `{message}` in the string
@@ -32,17 +39,12 @@
 ### Client setup
 
 - `cd client && npm install`
-- Set your dev server proxy to your backend server in `client/vue.config.js`
+- Set your API URL in `client/utils/app.js`
+
 ```
-devServer: {
-    proxy: {
-      '/api/*': {
-        target: 'http://localhost/laravel-vue-admin/server/public',
-        secure: false
-      }
-    }
-  }
+apiUrl: window.apiUrl || 'http://localhost/laravel-vue-admin/server/public'
 ```
+
 - `cd client && npm run serve`
 
 ### Credentials

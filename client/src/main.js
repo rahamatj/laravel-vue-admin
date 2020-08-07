@@ -13,7 +13,9 @@ import store from './store'
 
 window.app = require('./utils/app')
 
-window.axios = require('axios');
+window.axios = require('axios')
+
+axios.defaults.baseURL = app.apiUrl
 
 require('@/store/subscriber')
 

@@ -8,12 +8,4 @@ module.exports = {
 
   outputDir: '../server/public/dist',
   indexPath: '../../resources/views/welcome.blade.php',
-  devServer: {
-    proxy: {
-      '/api/*': {
-        target: 'http://localhost/laravel-vue-admin/server/public',
-        secure: false
-      }
-    }
-  }
 };

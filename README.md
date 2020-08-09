@@ -42,7 +42,9 @@ APP_URL=http://localhost/laravel-vue-admin/server/public
 - Set your API URL in `client/utils/app.js`
 
 ```
-apiUrl: window.apiUrl || 'http://localhost/laravel-vue-admin/server/public'
+apiUrl: process.env.NODE_ENV === 'production'
+            ? window.apiUrl
+            : 'http://localhost/laravel-vue-admin/server/public',
 ```
 
 - `cd client && npm run serve`

@@ -20,6 +20,9 @@ export default {
   verifyOtpAtLogin: (to, from, next) => {
     const user = store.getters['login/user']
 
+    if (user === null)
+      return next({ name: 'Login' })
+
     if (user.otp_type === 'google2fa' && ! user.is_google2fa_activated)
       return next({ name: 'google2fa.activate' })
 
@@ -31,6 +34,9 @@ export default {
   },
   activateGoogle2fa: (to, from, next) => {
     const user = store.getters['login/user']
+
+    if (user === null)
+      return next({ name: 'Login' })
 
     if (user.is_google2fa_activated || user.otp_type !== 'google2fa')
       return next({ name: 'checkpoint' })

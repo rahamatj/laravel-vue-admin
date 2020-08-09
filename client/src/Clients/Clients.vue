@@ -2,7 +2,7 @@
     <div>
         <page-title :heading=heading
                     :icon=icon
-                    no-create-new>
+                    no-button>
         </page-title>
         <b-alert :show="successMessage !== ''"
                  variant="success"

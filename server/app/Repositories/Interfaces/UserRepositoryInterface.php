@@ -10,6 +10,8 @@ interface UserRepositoryInterface
 
     public function create($data);
 
+    public function details(User $user);
+
     public function update(User $user, $data);
 
     public function delete(User $user);

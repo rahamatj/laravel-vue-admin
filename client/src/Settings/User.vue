@@ -2,7 +2,7 @@
     <div>
         <page-title :heading=heading
                     :icon=icon
-                    no-create-new>
+                    no-button>
         </page-title>
         <b-alert :show="successMessage !== ''"
                  variant="success"
@@ -10,7 +10,7 @@
         >
             {{ successMessage }}
         </b-alert>
-        <edit-user ref="editUser" :id="id"></edit-user>
+        <edit-user ref="editUser" :id="id" no-is-active></edit-user>
         <div>
             <b-button id="submit"
                       type="button"

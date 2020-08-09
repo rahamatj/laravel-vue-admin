@@ -1,15 +1,15 @@
 <template>
-    <div>
-        <div class="d-flex h-100 justify-content-center align-items-center" v-if="isLoading">
-            <b-spinner class="spinner" variant="primary"></b-spinner>
-        </div>
-        <div v-if="!isLoading">
-            <b-table stacked
-                     :items="users"
-                     :fields="fields">
-            </b-table>
-        </div>
+  <div>
+    <div class="d-flex h-100 justify-content-center align-items-center" v-if="isLoading">
+      <b-spinner class="spinner" variant="primary"></b-spinner>
     </div>
+    <div v-if="!isLoading">
+      <b-table stacked
+               :items="users"
+               :fields="fields">
+      </b-table>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -61,6 +61,15 @@
           {
             key: 'is_ip_lock_enabled',
             formatter: value => value ? 'Yes' : 'No'
+          },
+          {
+            key: 'is_active',
+            formatter: value => value ? 'Yes' : 'No'
+          },
+          'clients_count',
+          {
+            key: 'last_logged_in_at',
+            formatter: value => convertToLocaleDateTimeString(value)
           },
           {
             key: 'created_at',

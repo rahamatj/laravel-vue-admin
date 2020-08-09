@@ -53,7 +53,17 @@
                                 </div>
                                 <div class="modal-footer clearfix">
                                     <div class="float-left">
-                                        <button id="logout" @click="logout" class="btn-lg btn btn-link">Logout</button>
+                                        <b-button id="logout"
+                                                  @click="logout"
+                                                  class="btn-lg btn btn-link"
+                                                  :disabled="isLoggingOut"
+                                        >
+                                            <b-spinner class="resend-spinner"
+                                                       small
+                                                       v-if="isLoggingOut"
+                                            ></b-spinner>
+                                            Logout
+                                        </b-button>
                                     </div>
                                     <div class="float-left" v-if="otp.resendable(user.otp_type)">
                                         <b-button id="resend"
@@ -114,7 +124,7 @@
       }
     },
     computed: {
-      ...mapGetters('login', ['user'])
+      ...mapGetters('login', ['user', 'isLoggingOut'])
     },
     methods: {
       ...mapActions('login', ['unauthenticate']),
@@ -139,16 +149,9 @@
             })
       },
       logout() {
-        this.SET_IS_LOGGING_OUT(true)
         this.unauthenticate()
-            .then(() => {
-              this.SET_IS_LOGGING_OUT(false)
-              this.$router.replace({ name: 'login' })
-            })
-            .catch(error => {
-              console.error(error.response.data.message)
-              this.SET_IS_LOGGING_OUT(false)
-            })
+            .then(() => this.$router.replace({ name: 'login' }))
+            .catch(error => console.error(error.response.data.message))
       }
     }
   }

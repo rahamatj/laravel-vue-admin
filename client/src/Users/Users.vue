@@ -1,120 +1,120 @@
 <template>
-    <div>
-        <page-title :heading=heading
-                    :icon=icon
-                    @create-new="$bvModal.show('create-user-modal')">
-        </page-title>
-        <b-alert :show="successMessage !== ''"
-                 variant="success"
-                 dismissible
-        >
-            {{ successMessage }}
-        </b-alert>
-        <b-card class="main-card mb-4">
-            <datatable ref="usersTable"
-                       api-url="/api/users"
-                       :fields="fields">
-                <template v-slot:cell(actions)="row">
-                    <b-button variant="info"
-                              size="sm"
-                              class="mr-2 mb-2"
-                              @click="show(row.item.id)">
-                        Details
-                    </b-button>
-                    <b-button variant="primary"
-                              size="sm"
-                              class="mr-2 mb-2"
-                              @click="edit(row.item.id)">
-                        Edit
-                    </b-button>
-                    <b-button variant="danger"
-                              size="sm"
-                              class="mr-2 mb-2"
-                              @click="destroy(row.item.id)">
-                        Delete
-                    </b-button>
-                </template>
-            </datatable>
-        </b-card>
-        <b-modal id="show-user-modal" title="User Details" size="lg">
-            <show-user ref="showUser" :id="id"></show-user>
-            <template v-slot:modal-footer>
-                <div class="w-100">
-                    <div class="float-right">
-                        <b-button
-                                variant="danger"
-                                class="mr-2"
-                                @click="$bvModal.hide('show-user-modal')"
-                        >
-                            Cancel
-                        </b-button>
-                        <b-button
-                                variant="success"
-                                @click="$bvModal.hide('show-user-modal')"
-                        >
-                            Ok
-                        </b-button>
-                    </div>
-                </div>
-            </template>
-        </b-modal>
-        <b-modal id="create-user-modal" title="Create User" size="lg">
-            <create-user ref="createUser"></create-user>
-            <template v-slot:modal-footer>
-                <div class="w-100">
-                    <div class="float-right">
-                        <b-button
-                                variant="danger"
-                                class="mr-2"
-                                @click="$bvModal.hide('create-user-modal')"
-                                :disabled="isStoring"
-                        >
-                            Cancel
-                        </b-button>
-                        <b-button
-                                variant="success"
-                                @click="store"
-                                :disabled="isStoring"
-                        >
-                            <b-spinner class="spinner"
-                                       small
-                                       v-if="isStoring"
-                            ></b-spinner>
-                            Ok
-                        </b-button>
-                    </div>
-                </div>
-            </template>
-        </b-modal>
-        <b-modal id="edit-user-modal" title="Edit User" size="lg">
-            <edit-user ref="editUser" :id="id"></edit-user>
-            <template v-slot:modal-footer>
-                <div class="w-100">
-                    <div class="float-right">
-                        <b-button
-                                variant="danger"
-                                class="mr-2"
-                                @click="$bvModal.hide('edit-user-modal')"
-                                :disabled="isUpdating"
-                        >
-                            Cancel
-                        </b-button>
-                        <b-button
-                                variant="success"
-                                @click="update"
-                                :disabled="isUpdating"
-                        >
-                            <b-spinner class="spinner"
-                                       small
-                                       v-if="isUpdating"
-                            ></b-spinner>
-                            Ok
-                        </b-button>
-                    </div>
-                </div>
-            </template>
-        </b-modal>
-    </div>
+  <div>
+    <page-title :heading=heading
+                :icon=icon
+                @button-click="$bvModal.show('create-user-modal')">
+    </page-title>
+    <b-alert :show="successMessage !== ''"
+             variant="success"
+             dismissible
+    >
+      {{ successMessage }}
+    </b-alert>
+    <b-card class="main-card mb-4">
+      <datatable ref="usersTable"
+                 api-url="/api/users"
+                 :fields="fields">
+        <template v-slot:cell(actions)="row">
+          <b-button variant="info"
+                    size="sm"
+                    class="mr-2 mb-2"
+                    @click="show(row.item.id)">
+            Details
+          </b-button>
+          <b-button variant="primary"
+                    size="sm"
+                    class="mr-2 mb-2"
+                    @click="edit(row.item.id)">
+            Edit
+          </b-button>
+          <b-button variant="danger"
+                    size="sm"
+                    class="mr-2 mb-2"
+                    @click="destroy(row.item.id)">
+            Delete
+          </b-button>
+        </template>
+      </datatable>
+    </b-card>
+    <b-modal id="show-user-modal" title="User Details" size="lg">
+      <show-user ref="showUser" :id="id"></show-user>
+      <template v-slot:modal-footer>
+        <div class="w-100">
+          <div class="float-right">
+            <b-button
+                variant="danger"
+                class="mr-2"
+                @click="$bvModal.hide('show-user-modal')"
+            >
+              Cancel
+            </b-button>
+            <b-button
+                variant="success"
+                @click="$bvModal.hide('show-user-modal')"
+            >
+              Ok
+            </b-button>
+          </div>
+        </div>
+      </template>
+    </b-modal>
+    <b-modal id="create-user-modal" title="Create User" size="lg">
+      <create-user ref="createUser"></create-user>
+      <template v-slot:modal-footer>
+        <div class="w-100">
+          <div class="float-right">
+            <b-button
+                variant="danger"
+                class="mr-2"
+                @click="$bvModal.hide('create-user-modal')"
+                :disabled="isStoring"
+            >
+              Cancel
+            </b-button>
+            <b-button
+                variant="success"
+                @click="store"
+                :disabled="isStoring"
+            >
+              <b-spinner class="spinner"
+                         small
+                         v-if="isStoring"
+              ></b-spinner>
+              Ok
+            </b-button>
+          </div>
+        </div>
+      </template>
+    </b-modal>
+    <b-modal id="edit-user-modal" title="Edit User" size="lg">
+      <edit-user ref="editUser" :id="id"></edit-user>
+      <template v-slot:modal-footer>
+        <div class="w-100">
+          <div class="float-right">
+            <b-button
+                variant="danger"
+                class="mr-2"
+                @click="$bvModal.hide('edit-user-modal')"
+                :disabled="isUpdating"
+            >
+              Cancel
+            </b-button>
+            <b-button
+                variant="success"
+                @click="update"
+                :disabled="isUpdating"
+            >
+              <b-spinner class="spinner"
+                         small
+                         v-if="isUpdating"
+              ></b-spinner>
+              Ok
+            </b-button>
+          </div>
+        </div>
+      </template>
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -158,6 +158,17 @@
         },
         {
           key: 'otp_type',
+          sortable: true
+        },
+        {
+          key: 'is_active',
+          label: 'Activity Status',
+          formatter: value => value ? 'Active' : 'Inactive',
+          sortable: true
+        },
+        {
+          key: 'last_logged_in_at',
+          formatter: value => convertToLocaleDateTimeString(value),
           sortable: true
         },
         {

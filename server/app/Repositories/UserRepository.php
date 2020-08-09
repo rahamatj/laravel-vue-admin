@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Client;
 use App\Datatable\Datatable;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\User;
@@ -19,6 +20,11 @@ class UserRepository implements UserRepositoryInterface
             'is_otp_verification_enabled_at_login',
             'otp_type',
             'created_at'
+        ])->addSelect([
+            'last_logged_in_at' => Client::select('logged_in_at')
+                ->whereColumn('user_id', 'users.id')
+                ->latest()
+                ->take(1)
         ])->where('id', '!=', Auth::id());
 
         $datatable = new Datatable($query);
@@ -38,6 +44,26 @@ class UserRepository implements UserRepositoryInterface
     public function create($data)
     {
         return User::create($data);
+    }
+
+    public function details(User $user)
+    {
+        return User::join('users as parent', 'parent.id', '=', 'users.parent_id')
+            ->select([
+                'users.*',
+                'parent.name as parent_name',
+            ])
+            ->addSelect([
+                'last_logged_in_at' => Client::select('logged_in_at')
+                    ->whereColumn('user_id', 'users.id')
+                    ->latest()
+                    ->take(1)
+            ])
+            ->addSelect([
+                'clients_count' => Client::selectRaw('COUNT(id)')
+                    ->whereColumn('user_id', 'users.id')
+            ])
+            ->find($user->id);
     }
 
     public function update(User $user, $data)

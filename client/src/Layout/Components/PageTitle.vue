@@ -1,29 +1,29 @@
 <template>
-    <div class="app-page-title">
-        <div class="page-title-wrapper">
-            <div class="page-title-heading">
-                <div class="page-title-icon">
-                    <i :class="icon"/>
-                </div>
-                <div>
-                    {{heading}}
-                    <div
-                            class="page-title-subheading">
-                        {{subheading}}
-                    </div>
-                </div>
-            </div>
-            <div class="page-title-actions">
-                <button v-if="!noCreateNew"
-                        type="button"
-                        class="btn-shadow d-inline-flex align-items-center btn btn-success"
-                        @click="onCreateNew">
-                    <font-awesome-icon class="mr-2" icon="plus"/>
-                    Create New
-                </button>
-            </div>
+  <div class="app-page-title">
+    <div class="page-title-wrapper">
+      <div class="page-title-heading">
+        <div class="page-title-icon">
+          <i :class="icon"/>
         </div>
+        <div>
+          {{heading}}
+          <div
+              class="page-title-subheading">
+            {{subheading}}
+          </div>
+        </div>
+      </div>
+      <div class="page-title-actions">
+        <button v-if="!noButton"
+                type="button"
+                class="btn-shadow d-inline-flex align-items-center btn btn-success"
+                @click="onButtonClick">
+          <font-awesome-icon class="mr-2" icon="plus"/>
+          {{ buttonText }}
+        </button>
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -47,11 +47,12 @@
       icon: String,
       heading: String,
       subheading: String,
-      noCreateNew: Boolean
+      buttonText: String,
+      noButton: Boolean
     },
     methods: {
-      onCreateNew() {
-        this.$emit('create-new')
+      onButtonClick() {
+        this.$emit('button-click')
       }
     }
   }

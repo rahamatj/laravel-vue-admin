@@ -51,16 +51,23 @@ export default {
     },
     unauthenticate({ commit }) {
       return new Promise((resolve, reject) => {
+        commit('SET_IS_LOGGING_OUT', true)
+
         axios.post('/api/logout')
             .then(response => {
               commit('SET_TOKEN', null)
               commit('SET_FINGERPRINT', null)
               commit('SET_USER', null)
               commit('checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN', false, { root: true })
+              commit('SET_IS_LOGGING_OUT', false)
 
               resolve()
             })
-            .catch(error => reject(error))
+            .catch(error => {
+              commit('SET_IS_LOGGING_OUT', false)
+
+              reject(error)
+            })
       })
     },
     check({ commit }) {

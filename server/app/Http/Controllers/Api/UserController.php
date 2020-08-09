@@ -17,6 +17,7 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+     * @param UserRepositoryInterface $userRepository
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
     public function index(UserRepositoryInterface $userRepository)
@@ -27,7 +28,8 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Store $request
+     * @param UserRepositoryInterface $userRepository
      * @return \Illuminate\Http\Response
      */
     public function store(Store $request, UserRepositoryInterface $userRepository)
@@ -41,19 +43,21 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
+     * @param UserRepositoryInterface $userRepository
      * @return \Illuminate\Http\Resources\Json\JsonResource
      */
-    public function show(User $user)
+    public function show(User $user, UserRepositoryInterface $userRepository)
     {
-        return new UserResource($user);
+        return new UserResource($userRepository->details($user));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\User  $user
+     * @param Update $request
+     * @param \App\User $user
+     * @param UserRepositoryInterface $userRepository
      * @return \Illuminate\Http\Response
      */
     public function update(Update $request, User $user, UserRepositoryInterface $userRepository)
@@ -69,7 +73,8 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\User  $user
+     * @param \App\User $user
+     * @param UserRepositoryInterface $userRepository
      * @return \Illuminate\Http\Response
      */
     public function destroy(User $user, UserRepositoryInterface $userRepository)
@@ -81,6 +86,12 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param UpdatePassword $request
+     * @param User $user
+     * @param UserRepositoryInterface $userRepository
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updatePassword(UpdatePassword $request, User $user, UserRepositoryInterface $userRepository)
     {
         $userRepository->updatePassword($user, $request->validated());
@@ -90,6 +101,12 @@ class UserController extends Controller
         ]);
     }
 
+    /**
+     * @param UpdatePin $request
+     * @param User $user
+     * @param UserRepositoryInterface $userRepository
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updatePin(UpdatePin $request, User $user, UserRepositoryInterface $userRepository)
     {
         $userRepository->updatePin($user, $request->validated());

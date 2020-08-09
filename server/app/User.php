@@ -63,6 +63,11 @@ class User extends Authenticatable
         $this->attributes['pin'] = Hash::make($value);
     }
 
+    public function getLastLoggedInAtAttribute($value)
+    {
+        return $this->asDateTime($value);
+    }
+
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new ResetPassword($token));

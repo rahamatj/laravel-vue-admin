@@ -32,6 +32,11 @@ class LoginController extends Controller
                 $this->username() => [trans('auth.failed')],
             ]);
 
+        if (!$user->is_active)
+            return response()->json([
+                'message' => 'Your account has been deactivated.'
+            ], 401);
+
         if (!$this->isIpAllowed($request, $user))
             return response()->json([
                 'message' => 'Login from this IP: ' . $request->getClientIp() . ' is not allowed.'

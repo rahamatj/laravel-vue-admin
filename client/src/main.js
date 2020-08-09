@@ -20,13 +20,7 @@ axios.defaults.baseURL = app.apiUrl
 require('@/store/subscriber')
 
 store.dispatch('login/check')
-    .then(data => console.log(data.message))
-    .catch(data => {
-      console.error(data.message)
-
-      if (router.currentRoute.path !== '/')
-        router.push({ name: 'login' })
-    })
+    .catch(data => console.error(data.message))
 
 Vue.config.productionTip = false;
 

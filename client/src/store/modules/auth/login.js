@@ -73,18 +73,7 @@ export default {
     check({ commit }) {
       return new Promise((resolve, reject) => {
         axios.get('/api/auth/check')
-            .then(response => {
-              commit('SET_TOKEN', localStorage.getItem('token'))
-              commit('SET_FINGERPRINT', localStorage.getItem('fingerprint'))
-              commit('SET_USER', JSON.parse(localStorage.getItem('user')))
-              commit(
-                  'checkpoint/SET_IS_OTP_VERIFIED_AT_LOGIN',
-                  localStorage.getItem('isOtpVerifiedAtLogin') === 'true',
-                  { root: true }
-              )
-
-              resolve(response.data)
-            })
+            .then(response => resolve(response.data))
             .catch(error => {
               commit('SET_TOKEN', null)
               commit('SET_FINGERPRINT', null)

@@ -1,15 +1,15 @@
 <template>
-    <div class="app-sidebar sidebar-shadow">
-        <div class="app-header__logo">
-            <div class="logo-src"></div>
-        </div>
-        <div class="app-sidebar-content">
-            <VuePerfectScrollbar class="app-sidebar-scroll" v-once>
-                <sidebar-menu showOneChild :menu="menu"/>
-            </VuePerfectScrollbar>
-        </div>
-
+  <div class="app-sidebar sidebar-shadow">
+    <div class="app-header__logo">
+      <div class="logo-src"></div>
     </div>
+    <div class="app-sidebar-content">
+      <VuePerfectScrollbar class="app-sidebar-scroll" v-once>
+        <sidebar-menu showOneChild :menu="menu"/>
+      </VuePerfectScrollbar>
+    </div>
+
+  </div>
 </template>
 
 <script>
@@ -34,12 +34,7 @@
           {
             title: 'Dashboards',
             icon: 'pe-7s-rocket',
-            child: [
-              {
-                href: '/',
-                title: 'Analytics',
-              },
-            ]
+            href: '/',
           },
           {
             title: 'Users',

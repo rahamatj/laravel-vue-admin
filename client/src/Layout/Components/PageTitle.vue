@@ -17,9 +17,9 @@
         <button v-if="!noButton"
                 type="button"
                 class="btn-shadow d-inline-flex align-items-center btn btn-success"
-                @click="onButtonClick">
+                @click="onCreateNew">
           <font-awesome-icon class="mr-2" icon="plus"/>
-          {{ buttonText }}
+          Create New
         </button>
       </div>
     </div>
@@ -29,15 +29,13 @@
 <script>
   import {library} from '@fortawesome/fontawesome-svg-core'
   import {
-    faStar,
     faPlus
   } from '@fortawesome/free-solid-svg-icons'
   import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
   library.add(
-      faStar,
-      faPlus,
-  );
+      faPlus
+  )
 
   export default {
     components: {
@@ -47,12 +45,11 @@
       icon: String,
       heading: String,
       subheading: String,
-      buttonText: String,
-      noButton: Boolean
+      noCreateNew: Boolean
     },
     methods: {
-      onButtonClick() {
-        this.$emit('button-click')
+      onCreateNew() {
+        this.$emit('create-new')
       }
     }
   }

@@ -2,7 +2,7 @@
   <div>
     <page-title :heading=heading
                 :icon=icon
-                @button-click="$bvModal.show('create-user-modal')">
+                @create-new="$bvModal.show('create-user-modal')">
     </page-title>
     <b-alert :show="successMessage !== ''"
              variant="success"

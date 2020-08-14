@@ -1,6 +1,6 @@
 <template>
     <div>
-        <page-title :heading=heading :subheading=subheading :icon=icon no-button></page-title>
+        <page-title :heading=heading :subheading=subheading :icon=icon no-create-new></page-title>
         <div class="mb-3 card">
             <div class="card-header-tab card-header">
                 <div class="card-header-title font-size-lg text-capitalize font-weight-normal">

@@ -25,7 +25,7 @@
 - `cp .env.example .env`
 - Create database and update `server/.env`
 - `cd server && php artisan migrate --seed`
-- Set server URL in `server/.env` (If not set properly APIs won't work in production)
+- Set server URL in `server/.env`
 
 ```
 APP_URL=http://localhost/laravel-vue-admin/server/public
@@ -42,9 +42,7 @@ APP_URL=http://localhost/laravel-vue-admin/server/public
 - Set your API URL in `client/utils/app.js`
 
 ```
-apiUrl: process.env.NODE_ENV === 'production'
-            ? window.apiUrl
-            : 'http://localhost/laravel-vue-admin/server/public',
+apiUrl: 'http://localhost/laravel-vue-admin/server/public',
 ```
 
 - `cd client && npm run serve`

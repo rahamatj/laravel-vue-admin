@@ -15,7 +15,9 @@ window.app = require('./utils/app')
 
 window.axios = require('axios')
 
-axios.defaults.baseURL = app.apiUrl
+axios.defaults.baseURL = process.env.NODE_ENV === 'production'
+    ? window.apiUrl
+    : app.apiUrl
 
 require('@/store/subscriber')
 
@@ -31,7 +33,9 @@ Vue.component('userpages-layout', Pages)
 Vue.component('datatable', Datatable)
 
 router.beforeEach((to, from, next) => {
-  let title = app.name
+  let title = process.env.NODE_ENV === 'production'
+      ? window.appName
+      : app.name
 
   if (to.meta.title)
     title += ' - ' + to.meta.title

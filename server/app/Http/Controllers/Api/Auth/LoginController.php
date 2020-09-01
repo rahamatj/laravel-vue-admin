@@ -121,7 +121,7 @@ class LoginController extends Controller
         $client = Browser::browserName() ?: "Unknown";
         $platform = Browser::platformName() ?: "Unknown";
 
-        Client::updateOrcreate([
+        $client = Client::updateOrcreate([
             'fingerprint' => $request->header('Fingerprint'),
             'user_id' => $user->id
         ], [
@@ -132,7 +132,11 @@ class LoginController extends Controller
         ]);
 
         if ($user->is_otp_verification_enabled_at_login)
+        {
             Otp::send();
+            $client->is_otp_verified_at_login = false;
+            $client->save();
+        }
 
         return response()->json([
             'message' => 'Login successful!',
@@ -154,10 +158,6 @@ class LoginController extends Controller
         $user = $this->guard()->user();
 
         $user->tokens()->delete();
-
-        if ($user->is_otp_verification_enabled_at_login) {
-            Otp::logout($request->header('Fingerprint'));
-        }
 
         if ($response = $this->loggedOut($request)) {
             return $response;

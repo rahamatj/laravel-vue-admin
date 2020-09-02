@@ -23,6 +23,7 @@
 
 - `cd server && composer install`
 - `cp .env.example .env`
+- `php artisan key:generate`
 - Create database and update `server/.env`
 - `cd server && php artisan migrate --seed`
 - Set server URL in `server/.env`

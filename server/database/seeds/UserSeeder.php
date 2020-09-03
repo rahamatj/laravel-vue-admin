@@ -16,11 +16,7 @@ class UserSeeder extends Seeder
             'email' => 'admin@email.com'
         ]);
 
-        factory(\App\User::class)->create([
-            'email' => 'postman@email.com'
-        ]);
-
-        factory(\App\User::class, 100)->create();
+        factory(\App\User::class, 10)->create();
 
         Artisan::call('passport:install');
     }

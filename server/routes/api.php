@@ -40,6 +40,10 @@ Route::group(['middleware' => 'fingerprint-header-required'], function () {
                 return $request->user();
             });
 
+            Route::patch('/settings/user', 'UserController@updateMe');
+            Route::patch('/settings/user/password', 'UserController@updateMyPassword');
+            Route::patch('/settings/user/pin', 'UserController@updateMyPin');
+
             Route::patch('/users/{user}/password', 'UserController@updatePassword');
             Route::patch('/users/{user}/pin', 'UserController@updatePin');
             Route::resource('users', 'UserController')

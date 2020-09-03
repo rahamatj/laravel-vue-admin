@@ -121,7 +121,7 @@ export default new Router({
         title: 'User Settings',
         layout: 'default'
       },
-      component: () => import('../Settings/User.vue'),
+      component: () => import('../Settings/User/User.vue'),
       beforeEnter: guards.accessApp
     },
 

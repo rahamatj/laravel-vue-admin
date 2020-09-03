@@ -5,12 +5,14 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\Store;
 use App\Http\Requests\User\Update;
+use App\Http\Requests\User\UpdateMe;
 use App\Http\Requests\User\UpdatePassword;
 use App\Http\Requests\User\UpdatePin;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\User;
 use App\Http\Resources\User as UserResource;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -71,6 +73,23 @@ class UserController extends Controller
     }
 
     /**
+     * @param UpdateMe $request
+     * @param UserRepositoryInterface $userRepository
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateMe(UpdateMe $request, UserRepositoryInterface $userRepository)
+    {
+        $user = Auth::user();
+
+        $userRepository->update($user, $request->validated());
+
+        return response()->json([
+            'message' => 'User updated successfully!',
+            'data' => new UserResource($user)
+        ]);
+    }
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param \App\User $user
@@ -102,6 +121,22 @@ class UserController extends Controller
     }
 
     /**
+     * @param UpdatePassword $request
+     * @param UserRepositoryInterface $userRepository
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateMyPassword(UpdatePassword $request, UserRepositoryInterface $userRepository)
+    {
+        $user = Auth::user();
+
+        $userRepository->updatePassword($user, $request->validated());
+
+        return response()->json([
+            'message' => 'Password updated successfully!'
+        ]);
+    }
+
+    /**
      * @param UpdatePin $request
      * @param User $user
      * @param UserRepositoryInterface $userRepository
@@ -109,6 +144,22 @@ class UserController extends Controller
      */
     public function updatePin(UpdatePin $request, User $user, UserRepositoryInterface $userRepository)
     {
+        $userRepository->updatePin($user, $request->validated());
+
+        return response()->json([
+            'message' => 'PIN updated successfully!'
+        ]);
+    }
+
+    /**
+     * @param UpdatePin $request
+     * @param UserRepositoryInterface $userRepository
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateMyPin(UpdatePin $request, UserRepositoryInterface $userRepository)
+    {
+        $user = Auth::user();
+
         $userRepository->updatePin($user, $request->validated());
 
         return response()->json([

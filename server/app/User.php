@@ -28,7 +28,8 @@ class User extends Authenticatable
         'otp_type',
         'is_client_lock_enabled',
         'clients_allowed',
-        'is_ip_lock_enabled'
+        'is_ip_lock_enabled',
+        'is_active'
     ];
 
     /**

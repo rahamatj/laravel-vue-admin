@@ -21,9 +21,6 @@
       SidebarMenu,
       VuePerfectScrollbar
     },
-    props: {
-      user: Object
-    },
     data() {
       return {
         menu: [
@@ -32,9 +29,9 @@
             title: 'Main Navigation',
           },
           {
-            title: 'Dashboards',
+            title: 'Dashboard',
             icon: 'pe-7s-rocket',
-            href: '/',
+            href: '/dashboard',
           },
           {
             title: 'Users',
@@ -225,6 +222,12 @@
 
         //Init
         this.getWindowWidth();
+
+        const hiddenNavLinks = document.querySelectorAll('a.hidden')
+
+        hiddenNavLinks.forEach(link => {
+          link.parentNode.classList.add('hidden')
+        })
       })
     },
 

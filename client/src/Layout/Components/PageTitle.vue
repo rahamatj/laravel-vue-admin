@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="page-title-actions">
-        <button v-if="!noButton"
+        <button v-if="!noCreateNew"
                 type="button"
                 class="btn-shadow d-inline-flex align-items-center btn btn-success"
                 @click="onCreateNew">

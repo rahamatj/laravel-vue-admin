@@ -12,7 +12,7 @@
     </b-alert>
     <b-card class="main-card mb-4">
       <datatable ref="usersTable"
-                 api-url="/api/users"
+                 :api-url="apiUrl"
                  :fields="fields">
         <template v-slot:cell(actions)="row">
           <b-button variant="info"
@@ -134,6 +134,7 @@
     data: () => ({
       heading: 'Users',
       icon: 'pe-7s-users icon-gradient bg-happy-itmeo',
+      apiUrl: '/api/users',
       fields: [
         {
           key: 'row_no',

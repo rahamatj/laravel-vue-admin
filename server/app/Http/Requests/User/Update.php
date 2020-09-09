@@ -31,7 +31,8 @@ class Update extends FormRequest
             'otp_type' => 'string',
             'is_client_lock_enabled' => 'boolean',
             'clients_allowed' => 'integer|gt:0',
-            'is_ip_lock_enabled' => 'boolean'
+            'is_ip_lock_enabled' => 'boolean',
+            'is_active' => 'bail|required|boolean',
         ];
     }
 }

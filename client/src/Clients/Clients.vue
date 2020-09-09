@@ -1,44 +1,44 @@
 <template>
-    <div>
-        <page-title :heading=heading
-                    :icon=icon
-                    no-create-new>
-        </page-title>
-        <b-alert :show="successMessage !== ''"
-                 variant="success"
-                 dismissible
-        >
-            {{ successMessage }}
-        </b-alert>
-        <b-card class="main-card mb-4">
-            <datatable ref="clientsTable"
-                       apiUrl="/api/clients"
-                       :fields="fields">
-                <template v-slot:cell(actions)="row">
-                    <b-button variant="danger"
-                              size="sm"
-                              class="mr-2 mb-2"
-                              @click="changeEnabledStatus(row.item.id)"
-                              v-if="row.item.is_enabled">
-                        Disable
-                    </b-button>
-                    <b-button variant="primary"
-                              size="sm"
-                              class="mr-2 mb-2"
-                              @click="changeEnabledStatus(row.item.id)"
-                              v-if="!row.item.is_enabled">
-                        Enable
-                    </b-button>
-                    <b-button variant="danger"
-                              size="sm"
-                              class="mr-2 mb-2"
-                              @click="destroy(row.item.id)">
-                        Delete
-                    </b-button>
-                </template>
-            </datatable>
-        </b-card>
-    </div>
+  <div>
+    <page-title :heading=heading
+                :icon=icon
+                no-create-new>
+    </page-title>
+    <b-alert :show="successMessage !== ''"
+             variant="success"
+             dismissible
+    >
+      {{ successMessage }}
+    </b-alert>
+    <b-card class="main-card mb-4">
+      <datatable ref="clientsTable"
+                 :apiUrl="apiUrl"
+                 :fields="fields">
+        <template v-slot:cell(actions)="row">
+          <b-button variant="danger"
+                    size="sm"
+                    class="mr-2 mb-2"
+                    @click="changeEnabledStatus(row.item.id)"
+                    v-if="row.item.is_enabled">
+            Disable
+          </b-button>
+          <b-button variant="primary"
+                    size="sm"
+                    class="mr-2 mb-2"
+                    @click="changeEnabledStatus(row.item.id)"
+                    v-if="!row.item.is_enabled">
+            Enable
+          </b-button>
+          <b-button variant="danger"
+                    size="sm"
+                    class="mr-2 mb-2"
+                    @click="destroy(row.item.id)">
+            Delete
+          </b-button>
+        </template>
+      </datatable>
+    </b-card>
+  </div>
 </template>
 
 <script>
@@ -52,6 +52,7 @@
     data: () => ({
       heading: 'Clients',
       icon: 'pe-7s-phone icon-gradient bg-happy-itmeo',
+      apiUrl: '/api/clients',
       fields: [
         {
           key: 'row_no',

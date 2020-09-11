@@ -16,6 +16,7 @@ export default class Form {
     this.errors = new Errors();
     this.successMessage = '';
     this.loading = false;
+    this.data = new FormData();
   }
 
   isLoading() {
@@ -34,14 +35,12 @@ export default class Form {
   /**
    * Fetch all relevant data for the form.
    */
-  data() {
-    let data = {};
-
+  getData() {
     for (let property in this.originalData) {
-      data[property] = this[property];
+      this.data.append(property, this[property]);
     }
 
-    return data;
+    return this.data;
   }
 
 
@@ -63,7 +62,7 @@ export default class Form {
    * @param {string} url
    */
   post(url) {
-    return this.submit('post', url);
+    return this.submit(url);
   }
 
 
@@ -73,7 +72,8 @@ export default class Form {
    * @param {string} url
    */
   put(url) {
-    return this.submit('put', url);
+    this.data.append('_method', 'PUT');
+    return this.submit(url);
   }
 
 
@@ -83,7 +83,8 @@ export default class Form {
    * @param {string} url
    */
   patch(url) {
-    return this.submit('patch', url);
+    this.data.append('_method', 'PATCH');
+    return this.submit(url);
   }
 
 
@@ -93,7 +94,8 @@ export default class Form {
    * @param {string} url
    */
   delete(url) {
-    return this.submit('delete', url);
+    this.data.append('_method', 'DELETE');
+    return this.submit(url);
   }
 
 
@@ -103,10 +105,10 @@ export default class Form {
    * @param {string} requestType
    * @param {string} url
    */
-  submit(requestType, url) {
+  submit(url) {
     this.loading = true;
     return new Promise((resolve, reject) => {
-      axios[requestType](url, this.data())
+      axios.post(url, this.getData())
           .then(response => {
             this.onSuccess(response.data);
 

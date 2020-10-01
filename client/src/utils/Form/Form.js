@@ -31,31 +31,20 @@ export default class Form {
     return this.successMessage;
   }
 
-  createFormData(data, previousKey, index) {
+  createFormData(data, previousKey) {
     if (data instanceof Object) {
       Object.keys(data).forEach(key => {
         const value = data[key];
-        const type = typeof data;
+        if (previousKey) {
+          key = `${previousKey}[${key}]`;
+        }
         if (value instanceof Object && !Array.isArray(value) && !(value instanceof File)) {
-          if (previousKey) {
-              key = `${previousKey}[${key}]`;
-          }
-          this.createFormData(value, key, 0)
+          this.createFormData(value, key)
         } else if (Array.isArray(value)) {
-          if (previousKey) {
-            if (type === 'object')
-              key = `${previousKey}[${key}]`;
-            if (type === 'array')
-              key = `${previousKey}[${index++}]`;
-          }
           value.forEach((val, i) => {
-            this.createFormData(val, `${key}[${i}]`, 0);
+            this.createFormData(val, `${key}[${i}]`);
           });
         } else {
-          if (previousKey) {
-              key = `${previousKey}[${key}]`;
-          }
-          console.log(value, key)
           this.createFormData(value, key)
         }
       });

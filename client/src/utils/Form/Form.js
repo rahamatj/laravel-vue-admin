@@ -31,7 +31,7 @@ export default class Form {
     return this.successMessage;
   }
 
-  createFormData(data, previousKey) {
+  appendToFormData(data, previousKey) {
     if (data instanceof Object) {
       Object.keys(data).forEach(key => {
         const value = data[key];
@@ -39,13 +39,13 @@ export default class Form {
           key = `${previousKey}[${key}]`;
         }
         if (value instanceof Object && !Array.isArray(value) && !(value instanceof File)) {
-          this.createFormData(value, key)
+          this.appendToFormData(value, key)
         } else if (Array.isArray(value)) {
           value.forEach((val, i) => {
-            this.createFormData(val, `${key}[${i}]`);
+            this.appendToFormData(val, `${key}[${i}]`);
           });
         } else {
-          this.createFormData(value, key)
+          this.appendToFormData(value, key)
         }
       });
     } else {
@@ -63,7 +63,7 @@ export default class Form {
       data[property] = this[property]
     }
 
-    this.createFormData(data)
+    this.appendToFormData(data)
 
     return this.data;
   }

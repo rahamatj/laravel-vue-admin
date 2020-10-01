@@ -2,6 +2,7 @@
 
 namespace App\Image;
 
+use Illuminate\Support\Str;
 use Image as Intervention;
 
 class Image
@@ -26,7 +27,7 @@ class Image
     }
 
     public function setFileName($filename) {
-        $this->filename = Slug::make($filename) . '-' . date('Y-m-d-H-i-s');
+        $this->filename = Str::slug($filename) . '-' . date('Y-m-d-H-i-s');
     }
 
     public function getBaseName() {
@@ -39,9 +40,15 @@ class Image
 
     public function save(array $options = []) {
 
-        if(!empty($options)) {
+        if (isset($options['directory'])) {
             $this->setDirectory($options['directory']);
+        }
+
+        if (isset($options['filename'])) {
             $this->setFileName($options['filename']);
+        }
+
+        if (isset($options['resolution'])) {
             $this->setResolution($options['resolution']);
         }
 
